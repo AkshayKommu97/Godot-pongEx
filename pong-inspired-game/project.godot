@@ -1,0 +1,33 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+run/main_scene="res://scenes/MainMenu.tscn"
+config/features=PackedStringArray("4.3")
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
+
+[project]
+
+name="Pong Inspired Game"
+version="1.0"
+description="A top-down Pong inspired game with a start menu, gameplay, and high score system."
+main_scene="res://scenes/MainMenu.tscn"
+window_size=Vector2(800, 600)
+icon="res://assets/icon.png"
+run/main_scene="res://scenes/MainMenu.tscn"
+run/physics_fps=60
+run/rendering/quality=2
+run/rendering/vsync=true
+run/rendering/clear_color=Color(0.1, 0.1, 0.1, 1)
