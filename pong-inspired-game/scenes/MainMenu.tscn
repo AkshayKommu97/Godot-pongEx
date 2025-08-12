@@ -1,11 +1,47 @@
 [gd_scene load_steps=2 format=3 uid="uid://drjx34fgevmdc"]
 
-[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_1cuku"]
+[sub_resource type="GDScript" id="GDScript_wixh1"]
+script/source = "extends Control
+
+func _ready():
+	print(\"MainMenu: Checking for buttons...\")
+
+	var start_button = get_node_or_null(\"StartButton\")
+	var options_button = get_node_or_null(\"OptionsButton\")
+	var quit_button = get_node_or_null(\"QuitButton\")
+
+	if start_button:
+		start_button.pressed.connect(_on_StartButton_pressed)
+	else:
+		push_error(\"StartButton node not found!\")
+
+	if options_button:
+		options_button.pressed.connect(_on_OptionsButton_pressed)
+	else:
+		push_error(\"OptionsButton node not found!\")
+
+	if quit_button:
+		quit_button.pressed.connect(_on_QuitButton_pressed)
+	else:
+		push_error(\"QuitButton node not found!\")
+
+func _on_StartButton_pressed():
+	print(\"StartButton pressed\")
+	var error = get_tree().change_scene_to_file(\"res://scenes/Game.tscn\")
+	if error != OK:
+		print(\"Error changing scene: \", error)
+
+func _on_OptionsButton_pressed():
+	get_tree().change_scene_to_file(\"res://scenes/OptionsMenu.tscn\")
+
+func _on_QuitButton_pressed():
+	get_tree().quit()
+"
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_1cuku")
+script = SubResource("GDScript_wixh1")
 
 [node name="Background" type="Sprite2D" parent="."]
 
@@ -23,7 +59,7 @@ offset_top = 50.0
 offset_right = 496.0
 offset_bottom = 81.0
 text = "QUIT"
-script = ExtResource("1_1cuku")
+script = SubResource("GDScript_wixh1")
 
 [node name="OptionsButton" type="Button" parent="."]
 layout_mode = 0
@@ -32,4 +68,4 @@ offset_top = 100.0
 offset_right = 496.0
 offset_bottom = 131.0
 text = "Options"
-script = ExtResource("1_1cuku")
+script = SubResource("GDScript_wixh1")
