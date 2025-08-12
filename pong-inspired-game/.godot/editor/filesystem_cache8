@@ -1,0 +1,31 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1755014907
+README.md::TextFile::-1::1755014908::0::1::::<><>::
+::res://assets/::1755014907
+Ball.png::CompressedTexture2D::4293983146882126767::1755014908::1755017232::1::::<><>::
+BallMotion.png::CompressedTexture2D::8585268965763444537::1755014908::1755017232::1::::<><>::
+Board.png::CompressedTexture2D::244029390216586248::1755014908::1755017232::1::::<><>::
+Computer.png::CompressedTexture2D::3711443627810370927::1755014908::1755017232::1::::<><>::
+itch.io Cover.png::CompressedTexture2D::8689350999220273385::1755014908::1755017232::1::::<><>::
+Player.png::CompressedTexture2D::169540738861258440::1755014908::1755017232::1::::<><>::
+Preview.png::CompressedTexture2D::7552015336284329069::1755014908::1755017232::1::::<><>::
+README.txt::TextFile::-1::1755014908::0::1::::<><>::
+ScoreBar.png::CompressedTexture2D::3372359430519799363::1755014908::1755017232::1::::<><>::
+::res://assets/arts/::1755014907
+::res://assets/fonts/::1755014907
+Font download link.txt::TextFile::-1::1755014908::0::1::::<><>::
+::res://scenes/::1755014908
+EndScreen.tscn::PackedScene::5258882538919001027::1755014910::0::1::::<><>::uid://dqhemo1r1up1::::res://assets/Board.png<>res://scripts/EndScreen.gd
+Game.tscn::PackedScene::8479707205335741520::1755014910::0::1::::<><>::res://scripts/Game.gd<>res://scripts/PlayerPaddle.gd<>res://scripts/CPUPaddle.gd<>res://scripts/Ball.gd<>uid://b2gbjl8mooaxr::::res://assets/Ball.png
+MainMenu.tscn::PackedScene::8372499816955330944::1755016140::0::1::::<><>::res://scripts/MainMenu.gd
+OptionsMenu.tscn::PackedScene::2733734311691355548::1755014910::0::1::::<><>::res://scripts/MainMenu.gd<>uid://dqhemo1r1up1::::res://assets/Board.png
+PauseMenu.tscn::PackedScene::3184888505845397985::1755014910::0::1::::<><>::res://scripts/PauseMenu.gd
+::res://scripts/::1755014908
+Ball.gd::GDScript::-1::1755016122::0::1::::<>CharacterBody2D<>::
+CPUPaddle.gd::GDScript::-1::1755014910::0::1::::<>CharacterBody2D<>::
+EndScreen.gd::GDScript::-1::1755014910::0::1::::<>RefCounted<>::
+Game.gd::GDScript::-1::1755014910::0::1::::<>Node2D<>::
+HighScoreManager.gd::GDScript::-1::1755014910::0::1::::<>Node<>::
+MainMenu.gd::GDScript::-1::1755014910::0::1::::<>Control<>::
+PauseMenu.gd::GDScript::-1::1755014910::0::1::::<>Control<>::
+PlayerPaddle.gd::GDScript::-1::1755014910::0::1::::<>CharacterBody2D<>::

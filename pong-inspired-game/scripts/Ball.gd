@@ -3,6 +3,11 @@ extends CharacterBody2D
 @export var speed: float = 300.0
 var direction: Vector2 = Vector2(0, -1)
 
+# 🔹 New variables for speed increment
+var base_speed: float = 300.0
+var max_speed: float = 1000.0
+var hit_count: int = 0
+
 func _ready() -> void:
 	randomize()
 	direction = Vector2(randf_range(-0.5, 0.5), -1).normalized()
@@ -17,16 +22,13 @@ func _physics_process(delta: float) -> void:
 func check_out_of_bounds() -> void:
 	var screen_rect = get_viewport_rect()
 
-	# 🔹 Top/Bottom boundary: usually means player/enemy missed
-	# Score points when ball goes past paddles
 	if position.y < 0:
-		get_parent().player_scored(1)  # Player scores
+		get_parent().player_scored(1)
 		reset_ball()
 	elif position.y > get_viewport_rect().size.y:
-		get_parent().player_scored(2)  # CPU scores
+		get_parent().player_scored(2)
 		reset_ball()
 
-	# 🔹 Left/Right boundary: bounce horizontally
 	if position.x < 0:
 		position.x = 0
 		direction.x *= -1
@@ -37,11 +39,19 @@ func check_out_of_bounds() -> void:
 func reset_ball() -> void:
 	position = get_viewport_rect().size / 2
 	direction = Vector2(randf_range(-0.5, 0.5), -1 if randf() < 0.5 else 1).normalized()
+	speed = base_speed  # Reset speed when round restarts
+	hit_count = 0       # Reset hit count
 
 func handle_collision(collision: KinematicCollision2D) -> void:
 	var collider = collision.get_collider()
 	if collider.name == "PlayerPaddle" or collider.name == "EnemyPaddle":
 		handle_paddle_bounce(collider, collision.get_position())
+
+		# 🔹 Increase speed ONLY if PlayerPaddle is hit
+		if collider.name == "PlayerPaddle":
+			hit_count += 1
+			var t = clamp(hit_count / 10.0, 0.0, 1.0) # fraction of progress to max speed
+			speed = lerp(base_speed, max_speed, t)
 	else:
 		direction = direction.bounce(collision.get_normal()).normalized()
 
