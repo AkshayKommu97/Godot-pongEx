@@ -1,1 +1,9 @@
 res://scenes/MainMenu.tscn
+res://scripts/GameState.gd
+res://scripts/LevelSelect.gd
+res://scenes/LevelSelect.tscn
+res://levels/Level_1.tscn
+res://scripts/Game.gd
+res://scripts/MainMenu.gd
+res://scripts/Ball.gd
+res://scripts/CPUPaddle.gd

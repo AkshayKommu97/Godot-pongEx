@@ -31,7 +31,14 @@ func player_scored(player):
 		player2_score += 1
 	update_score_display()
 	check_high_score()
-	$Ball.reset_ball()
+
+	# ✅ Check for win condition
+	if player1_score >= GameState.points_to_win:
+		on_player_wins()
+	elif player2_score >= GameState.points_to_win:
+		on_cpu_wins()
+	else:
+		$Ball.reset_ball()
 
 func check_high_score():
 	if player1_score > high_score:
@@ -50,3 +57,14 @@ func load_high_score():
 		if file:
 			high_score = file.get_var()
 			file.close()
+
+func on_player_wins():
+	# ✅ Unlock next level only if current is the highest unlocked
+	if GameState.current_level == GameState.unlocked_levels:
+		GameState.unlock_next_level()
+	await get_tree().create_timer(1.0).timeout
+	get_tree().change_scene_to_file("res://scenes/LevelSelect.tscn")
+
+func on_cpu_wins():
+	await get_tree().create_timer(1.0).timeout
+	get_tree().change_scene_to_file("res://scenes/LevelSelect.tscn")
