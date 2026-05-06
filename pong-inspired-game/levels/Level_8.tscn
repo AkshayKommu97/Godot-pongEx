@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://d3nivi433ukn1"]
+[gd_scene format=3 uid="uid://d3nivi433ukn1"]
 
-[ext_resource type="Script" path="res://scripts/Game.gd" id="1_27yux"]
-[ext_resource type="Script" path="res://scripts/PlayerPaddle.gd" id="2_8hk6u"]
-[ext_resource type="Script" path="res://scripts/CPUPaddle.gd" id="3_nhyeu"]
-[ext_resource type="Script" path="res://scripts/Ball.gd" id="4_d24ka"]
+[ext_resource type="Script" uid="uid://csq23ftrwt85y" path="res://scripts/Game.gd" id="1_27yux"]
+[ext_resource type="Script" uid="uid://c0ly11c7sug3n" path="res://scripts/PlayerPaddle.gd" id="2_8hk6u"]
+[ext_resource type="Script" uid="uid://c61gvb0e1kmmx" path="res://scripts/CPUPaddle.gd" id="3_nhyeu"]
+[ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="4_d24ka"]
 [ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_vf0c3"]
+[ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_4q1qi"]
+[ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_43lx5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
@@ -18,17 +20,30 @@ glow_intensity = 1.0
 glow_strength = 0.9
 glow_blend_mode = 0
 
-[node name="Game" type="Node2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7mlhx"]
+shader = ExtResource("6_4q1qi")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.25
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 2.0
+shader_parameter/glow_width = 0.01
+
+[node name="Game" type="Node2D" unique_id=131201334]
 script = ExtResource("1_27yux")
 
-[node name="PlayerPaddle" type="CharacterBody2D" parent="."]
+[node name="PlayerPaddle" type="CharacterBody2D" parent="." unique_id=1636812669]
 position = Vector2(174, 750)
 script = ExtResource("2_8hk6u")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle" unique_id=1088281372]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D" unique_id=2057403942]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
@@ -36,14 +51,14 @@ offset_bottom = 10.0
 color = Color(1, 0, 0, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="CPUPaddle" type="CharacterBody2D" parent="."]
+[node name="CPUPaddle" type="CharacterBody2D" parent="." unique_id=224626471]
 position = Vector2(174, 130)
 script = ExtResource("3_nhyeu")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle" unique_id=324837554]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D" unique_id=653711958]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
@@ -51,29 +66,43 @@ offset_bottom = 10.0
 color = Color(0.910126, 0, 0.112919, 1)
 metadata/_edit_use_anchors_ = true
 
-[node name="Ball" type="CharacterBody2D" parent="."]
+[node name="Ball" type="CharacterBody2D" parent="." unique_id=645622320]
 position = Vector2(174, 330)
 script = ExtResource("4_d24ka")
 
-[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=236961985]
 texture = ExtResource("5_vf0c3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1723968974]
 shape = SubResource("CircleShape2D_1r5n3")
 
-[node name="ScoreLabel" type="Label" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1427570923]
+environment = SubResource("Environment_qovpe")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=919757330]
+layer = 10
+
+[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=1812728420]
+z_index = -10
+material = SubResource("ShaderMaterial_7mlhx")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.165656, 0.165656, 0.165656, 1)
+script = ExtResource("7_43lx5")
+
+[node name="ScoreLabel" type="Label" parent="UI" unique_id=216458621]
 offset_left = 9.0
 offset_top = 358.0
 offset_right = 54.0
 offset_bottom = 381.0
 text = "0 : 0"
 
-[node name="PauseButton" type="Button" parent="."]
+[node name="PauseButton" type="Button" parent="UI" unique_id=245832460]
 offset_left = 299.0
 offset_top = 4.0
 offset_right = 354.0
 offset_bottom = 35.0
 text = "Pause"
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_qovpe")

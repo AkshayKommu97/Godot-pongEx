@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://c61gvb0e1kmmx" path="res://scripts/CPUPaddle.gd" id="3_gj5ao"]
 [ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="4_hkd7r"]
 [ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_fx3is"]
+[ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_b5dvu"]
+[ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_knst5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
@@ -17,6 +19,19 @@ glow_enabled = true
 glow_intensity = 1.0
 glow_strength = 0.9
 glow_blend_mode = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sycs3"]
+shader = ExtResource("6_b5dvu")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.25
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 2.0
+shader_parameter/glow_width = 0.01
 
 [node name="Game" type="Node2D" unique_id=182480304]
 script = ExtResource("1_p84nf")
@@ -61,19 +76,33 @@ texture = ExtResource("5_fx3is")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1634091754]
 shape = SubResource("CircleShape2D_1r5n3")
 
-[node name="ScoreLabel" type="Label" parent="." unique_id=438794474]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1149663346]
+environment = SubResource("Environment_qovpe")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1282818095]
+layer = 10
+
+[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=1502401717]
+z_index = -10
+material = SubResource("ShaderMaterial_sycs3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.165656, 0.165656, 0.165656, 1)
+script = ExtResource("7_knst5")
+
+[node name="ScoreLabel" type="Label" parent="UI" unique_id=207408004]
 offset_left = 9.0
 offset_top = 358.0
 offset_right = 54.0
 offset_bottom = 381.0
 text = "0 : 0"
 
-[node name="PauseButton" type="Button" parent="." unique_id=313331899]
+[node name="PauseButton" type="Button" parent="UI" unique_id=2134322067]
 offset_left = 299.0
 offset_top = 4.0
 offset_right = 354.0
 offset_bottom = 35.0
 text = "Pause"
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1149663346]
-environment = SubResource("Environment_qovpe")

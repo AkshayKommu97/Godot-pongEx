@@ -12,7 +12,7 @@ func _process(delta):
 		material.set_shader_parameter("radius", radius)
 
 		# stop after one wave
-		if radius > 1.2:
+		if radius > 2.0:
 			active = false
 			radius = 0.0
 			material.set_shader_parameter("radius", 0.0)
