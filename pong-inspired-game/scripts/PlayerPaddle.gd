@@ -4,6 +4,13 @@ extends CharacterBody2D
 @export var ball_speed_increase = 30.0
 @export var max_ball_speed = 800.0
 
+
+
+func _ready():
+	$CollisionShape2D/ColorRect.color = Color(1, 0, 0)  # pure red
+
+
+
 func _physics_process(delta):
 	var direction = Input.get_axis("ui_left", "ui_right")
 	velocity = Vector2(direction * speed, 0)
@@ -22,4 +29,4 @@ func _physics_process(delta):
 	# usual keep-in-bounds
 	move_and_slide()  # if you want to continue using move_and_slide instead, adjust above
 	position.x = clamp(position.x, 40, get_viewport_rect().size.x - 40)
-	position.y = 550
+	position.y = 700

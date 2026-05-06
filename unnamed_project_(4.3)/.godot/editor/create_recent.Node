@@ -1,0 +1,12 @@
+ColorRect
+Panel
+CollisionShape2D
+CharacterBody2D
+Area2D
+AnimationPlayer
+PointLight2D
+WorldEnvironment
+StaticBody2D
+Button
+VBoxContainer
+Control

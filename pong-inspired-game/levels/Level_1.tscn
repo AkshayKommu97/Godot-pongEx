@@ -1,67 +1,104 @@
-[gd_scene load_steps=8 format=3 uid="uid://7cmg56wxx1ku"]
+[gd_scene format=3 uid="uid://cpxer5s3cbxgv"]
 
-[ext_resource type="Script" path="res://scripts/Game.gd" id="1_pq6us"]
-[ext_resource type="Script" path="res://scripts/PlayerPaddle.gd" id="2_ij4q5"]
-[ext_resource type="Script" path="res://scripts/CPUPaddle.gd" id="3_p4hl1"]
-[ext_resource type="Script" path="res://scripts/Ball.gd" id="4_ekmgp"]
-[ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_rcg1b"]
+[ext_resource type="Script" uid="uid://csq23ftrwt85y" path="res://scripts/Game.gd" id="1_m266s"]
+[ext_resource type="Script" uid="uid://c0ly11c7sug3n" path="res://scripts/PlayerPaddle.gd" id="2_qmxy8"]
+[ext_resource type="Script" uid="uid://c61gvb0e1kmmx" path="res://scripts/CPUPaddle.gd" id="3_kjih3"]
+[ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="4_jqswo"]
+[ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_m4ija"]
+[ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_btk8o"]
+[ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_5uqhs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1r5n3"]
 
-[node name="Game" type="Node2D"]
-script = ExtResource("1_pq6us")
+[sub_resource type="Environment" id="Environment_qovpe"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.0
+glow_strength = 0.9
+glow_blend_mode = 0
 
-[node name="PlayerPaddle" type="CharacterBody2D" parent="."]
-position = Vector2(400, 550)
-script = ExtResource("2_ij4q5")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5uqhs"]
+shader = ExtResource("6_btk8o")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.25
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle"]
+[node name="Game" type="Node2D" unique_id=1253919278]
+script = ExtResource("1_m266s")
+
+[node name="PlayerPaddle" type="CharacterBody2D" parent="." unique_id=1674813748]
+position = Vector2(174, 700)
+script = ExtResource("2_qmxy8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle" unique_id=333283346]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D" unique_id=769129729]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
 offset_bottom = 10.0
-color = Color(0.345098, 1, 1, 1)
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="CPUPaddle" type="CharacterBody2D" parent="."]
-position = Vector2(400, 100)
-script = ExtResource("3_p4hl1")
+[node name="CPUPaddle" type="CharacterBody2D" parent="." unique_id=1253576703]
+position = Vector2(174, 20)
+script = ExtResource("3_kjih3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle" unique_id=1712311981]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D" unique_id=236923949]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
 offset_bottom = 10.0
 color = Color(0.910126, 0, 0.112919, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="Ball" type="CharacterBody2D" parent="."]
-position = Vector2(400, 300)
-script = ExtResource("4_ekmgp")
+[node name="Ball" type="CharacterBody2D" parent="." unique_id=1663367629]
+position = Vector2(174, 330)
+script = ExtResource("4_jqswo")
 
-[node name="Sprite2D" type="Sprite2D" parent="Ball"]
-texture = ExtResource("5_rcg1b")
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=413987602]
+texture = ExtResource("5_m4ija")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=842367947]
 shape = SubResource("CircleShape2D_1r5n3")
 
-[node name="ScoreLabel" type="Label" parent="."]
-offset_left = 380.0
-offset_top = 20.0
-offset_right = 425.0
-offset_bottom = 43.0
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1145769435]
+environment = SubResource("Environment_qovpe")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1110191007]
+layer = 10
+
+[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=421880914]
+z_index = -10
+material = SubResource("ShaderMaterial_5uqhs")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.165656, 0.165656, 0.165656, 1)
+script = ExtResource("7_5uqhs")
+
+[node name="ScoreLabel" type="Label" parent="UI" unique_id=595083294]
+offset_left = 9.0
+offset_top = 358.0
+offset_right = 54.0
+offset_bottom = 381.0
 text = "0 : 0"
 
-[node name="PauseButton" type="Button" parent="."]
-offset_left = 750.0
-offset_top = 20.0
-offset_right = 805.0
-offset_bottom = 51.0
+[node name="PauseButton" type="Button" parent="UI" unique_id=430634562]
+offset_left = 299.0
+offset_top = 4.0
+offset_right = 354.0
+offset_bottom = 35.0
 text = "Pause"

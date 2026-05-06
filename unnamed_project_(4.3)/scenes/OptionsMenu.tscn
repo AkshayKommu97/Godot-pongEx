@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://be7ig7v6kru1q"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_lw7ss"]
+[ext_resource type="Texture2D" uid="uid://dqhemo1r1up1" path="res://assets/Board.png" id="2_ic1ud"]
+
+[node name="OptionsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_lw7ss")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+texture = ExtResource("2_ic1ud")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 400.0
+offset_right = 510.0
+offset_bottom = 23.0
+text = "Options Menu"
+
+[node name="VolumeSlider" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 200.0
+offset_right = 408.0
+offset_bottom = 216.0
+value = 50.0
+
+[node name="VolumeLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 150.0
+offset_right = 459.0
+offset_bottom = 173.0
+text = "Volume"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+text = "Back"

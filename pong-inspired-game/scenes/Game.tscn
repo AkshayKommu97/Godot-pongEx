@@ -1,67 +1,101 @@
-[gd_scene load_steps=8 format=3 uid="uid://ds2vsk24j0aay"]
+[gd_scene format=3 uid="uid://ds2vsk24j0aay"]
 
-[ext_resource type="Script" path="res://scripts/Game.gd" id="1_eq86m"]
-[ext_resource type="Script" path="res://scripts/PlayerPaddle.gd" id="1_tfynd"]
-[ext_resource type="Script" path="res://scripts/CPUPaddle.gd" id="2_bx1hv"]
-[ext_resource type="Script" path="res://scripts/Ball.gd" id="3_mdtnl"]
+[ext_resource type="Script" uid="uid://csq23ftrwt85y" path="res://scripts/Game.gd" id="1_eq86m"]
+[ext_resource type="Script" uid="uid://c0ly11c7sug3n" path="res://scripts/PlayerPaddle.gd" id="1_tfynd"]
+[ext_resource type="Script" uid="uid://c61gvb0e1kmmx" path="res://scripts/CPUPaddle.gd" id="2_bx1hv"]
+[ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="3_mdtnl"]
 [ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="4_n6p4k"]
+[ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_aug50"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1r5n3"]
 
-[node name="Game" type="Node2D"]
+[sub_resource type="Environment" id="Environment_qovpe"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.0
+glow_strength = 0.9
+glow_blend_mode = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kiw3p"]
+shader = ExtResource("6_aug50")
+shader_parameter/strength = 0.08
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.25
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.135
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 2.0
+shader_parameter/glow_width = 0.02
+
+[node name="Game" type="Node2D" unique_id=1926963680]
 script = ExtResource("1_eq86m")
 
-[node name="PlayerPaddle" type="CharacterBody2D" parent="."]
-position = Vector2(400, 550)
+[node name="PlayerPaddle" type="CharacterBody2D" parent="." unique_id=1685454329]
+position = Vector2(174, 700)
 script = ExtResource("1_tfynd")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle" unique_id=675858105]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D" unique_id=1554547469]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
 offset_bottom = 10.0
-color = Color(0.345098, 1, 1, 1)
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="CPUPaddle" type="CharacterBody2D" parent="."]
-position = Vector2(400, 100)
+[node name="CPUPaddle" type="CharacterBody2D" parent="." unique_id=1817070689]
+position = Vector2(174.5, 20)
 script = ExtResource("2_bx1hv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle" unique_id=811075364]
 shape = SubResource("RectangleShape2D_5t517")
 
-[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D"]
+[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D" unique_id=999101634]
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
 offset_bottom = 10.0
 color = Color(0.910126, 0, 0.112919, 1)
+metadata/_edit_use_anchors_ = true
 
-[node name="Ball" type="CharacterBody2D" parent="."]
-position = Vector2(400, 300)
+[node name="Ball" type="CharacterBody2D" parent="." unique_id=48140383]
+position = Vector2(174, 330)
 script = ExtResource("3_mdtnl")
 
-[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=1073036992]
 texture = ExtResource("4_n6p4k")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=68725012]
 shape = SubResource("CircleShape2D_1r5n3")
 
-[node name="ScoreLabel" type="Label" parent="."]
-offset_left = 380.0
-offset_top = 20.0
-offset_right = 425.0
-offset_bottom = 43.0
+[node name="ScoreLabel" type="Label" parent="." unique_id=741948451]
+offset_left = 9.0
+offset_top = 358.0
+offset_right = 54.0
+offset_bottom = 381.0
 text = "0 : 0"
 
-[node name="PauseButton" type="Button" parent="."]
-offset_left = 750.0
-offset_top = 20.0
-offset_right = 805.0
-offset_bottom = 51.0
+[node name="PauseButton" type="Button" parent="." unique_id=478812458]
+offset_left = 299.0
+offset_top = 4.0
+offset_right = 354.0
+offset_bottom = 35.0
 text = "Pause"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1899349364]
+environment = SubResource("Environment_qovpe")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1956380601]
+material = SubResource("ShaderMaterial_kiw3p")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

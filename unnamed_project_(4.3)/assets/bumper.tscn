@@ -1,0 +1,82 @@
+[gd_scene load_steps=9 format=3 uid="uid://cvv0e0bmfbk26"]
+
+[ext_resource type="Script" path="res://scripts/Bumper.gd" id="1_4v24l"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4wkx8"]
+radius = 15.4632
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u33wc"]
+bg_color = Color(0.198374, 0.690488, 0.582794, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="Gradient" id="Gradient_472yr"]
+offsets = PackedFloat32Array(0, 0.928571, 1)
+colors = PackedColorArray(1.92523e-06, 0.811988, 0.959201, 1, 0.876623, 0.876623, 0.876623, 1, 0.0392157, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_enbkf"]
+gradient = SubResource("Gradient_472yr")
+use_hdr = true
+fill_to = Vector2(0.559633, 0.00917431)
+
+[sub_resource type="Animation" id="Animation_y7cyv"]
+resource_name = "Glow"
+length = 0.3
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1, -0.15, 0, 0.15, 0, 6, -0.15, 0, 0.15, 0, 1, -0.15, 0, 0.15, 0),
+"times": PackedFloat32Array(0, 0.133333, 0.3)
+}
+
+[sub_resource type="Animation" id="Animation_y5h0d"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(6, -0.15, 0, 0.15, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lcggn"]
+_data = {
+"Glow": SubResource("Animation_y7cyv"),
+"RESET": SubResource("Animation_y5h0d")
+}
+
+[node name="Bumper" type="Area2D"]
+script = ExtResource("1_4v24l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4wkx8")
+
+[node name="Panel" type="Panel" parent="CollisionShape2D"]
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 15.0
+offset_bottom = 15.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_u33wc")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.027451, 1, 1, 1)
+energy = 6.0
+range_z_min = -1
+range_z_max = 1
+texture = SubResource("GradientTexture2D_enbkf")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_lcggn")
+}

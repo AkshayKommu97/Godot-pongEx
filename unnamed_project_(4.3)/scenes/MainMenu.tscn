@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://drjx34fgevmdc"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_1cuku"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_1cuku")
+
+[node name="Background" type="Sprite2D" parent="."]
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 312.0
+offset_right = 238.0
+offset_bottom = 343.0
+text = "Start Game"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 362.0
+offset_right = 238.0
+offset_bottom = 393.0
+text = "QUIT"
+script = ExtResource("1_1cuku")
+
+[node name="OptionsButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 412.0
+offset_right = 238.0
+offset_bottom = 443.0
+text = "Options"
+script = ExtResource("1_1cuku")

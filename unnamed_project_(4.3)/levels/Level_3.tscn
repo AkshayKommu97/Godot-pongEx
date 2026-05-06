@@ -1,0 +1,79 @@
+[gd_scene load_steps=9 format=3 uid="uid://c0q7ssc6r23vh"]
+
+[ext_resource type="Script" path="res://scripts/Game.gd" id="1_p84nf"]
+[ext_resource type="Script" path="res://scripts/PlayerPaddle.gd" id="2_med0s"]
+[ext_resource type="Script" path="res://scripts/CPUPaddle.gd" id="3_gj5ao"]
+[ext_resource type="Script" path="res://scripts/Ball.gd" id="4_hkd7r"]
+[ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_fx3is"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
+size = Vector2(79.5, 19)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1r5n3"]
+
+[sub_resource type="Environment" id="Environment_qovpe"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.0
+glow_strength = 0.9
+glow_blend_mode = 0
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_p84nf")
+
+[node name="PlayerPaddle" type="CharacterBody2D" parent="."]
+position = Vector2(174, 750)
+script = ExtResource("2_med0s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerPaddle"]
+shape = SubResource("RectangleShape2D_5t517")
+
+[node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D"]
+offset_left = -40.0
+offset_top = -10.0
+offset_right = 40.0
+offset_bottom = 10.0
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="CPUPaddle" type="CharacterBody2D" parent="."]
+position = Vector2(174, 130)
+script = ExtResource("3_gj5ao")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle"]
+shape = SubResource("RectangleShape2D_5t517")
+
+[node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D"]
+offset_left = -40.0
+offset_top = -10.0
+offset_right = 40.0
+offset_bottom = 10.0
+color = Color(0.910126, 0, 0.112919, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Ball" type="CharacterBody2D" parent="."]
+position = Vector2(174, 330)
+script = ExtResource("4_hkd7r")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+texture = ExtResource("5_fx3is")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("CircleShape2D_1r5n3")
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 9.0
+offset_top = 358.0
+offset_right = 54.0
+offset_bottom = 381.0
+text = "0 : 0"
+
+[node name="PauseButton" type="Button" parent="."]
+offset_left = 299.0
+offset_top = 4.0
+offset_right = 354.0
+offset_bottom = 35.0
+text = "Pause"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qovpe")

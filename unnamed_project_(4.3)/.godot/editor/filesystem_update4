@@ -1,0 +1,4 @@
+res://scenes/Game.tscn
+res://levels/Level_1.tscn
+res://scripts/Game.gd
+res://scripts/GameState.gd

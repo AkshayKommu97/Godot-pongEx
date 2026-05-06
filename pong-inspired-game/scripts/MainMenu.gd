@@ -3,9 +3,9 @@ extends Control
 func _ready():
 	print("MainMenu: Checking for buttons...")
 
-	var start_button = get_node_or_null("StartButton")
-	var options_button = get_node_or_null("OptionsButton")
-	var quit_button = get_node_or_null("QuitButton")
+	var start_button = $UI/StartButton
+	var options_button = $UI/OptionsButton
+	var quit_button = $UI/QuitButton
 
 	if start_button:
 		start_button.pressed.connect(_on_StartButton_pressed)
