@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dmeruk17vutb3"]
+
+[ext_resource type="Script" uid="uid://luiya4lk650s" path="res://scenes/Effects/paddleExplosion.gd" id="1_t4hy4"]
+
+[sub_resource type="Gradient" id="Gradient_yd8e3"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_d5fve"]
+gradient = SubResource("Gradient_yd8e3")
+width = 2
+height = 2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v0tj5"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 350.0
+angular_velocity_min = -720.0
+angular_velocity_max = 719.99994
+gravity = Vector3(0, 400, 0)
+scale_min = 2.0
+scale_max = 6.0
+
+[node name="PaddleExplosion" type="GPUParticles2D" unique_id=2010051628]
+emitting = false
+amount = 40
+texture = SubResource("GradientTexture2D_d5fve")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_v0tj5")
+script = ExtResource("1_t4hy4")

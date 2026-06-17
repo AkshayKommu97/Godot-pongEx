@@ -1,6 +1,21 @@
 [gd_scene format=3 uid="uid://drjx34fgevmdc"]
 
 [ext_resource type="Script" uid="uid://cpkhegm75qtdh" path="res://scripts/MainMenu.gd" id="1_1cuku"]
+[ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="2_2wh52"]
+[ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="3_ow34m"]
+[ext_resource type="Texture2D" uid="uid://dfuiube6b1mwr" path="res://assets/Preview.png" id="4_ow34m"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l72w3"]
+shader = ExtResource("2_2wh52")
+shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
+shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
+shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
+shader_parameter/grid_size = 0.20000000298023
+shader_parameter/line_thickness = 0.002000000095
+shader_parameter/scroll_speed = 0.06800000323
+shader_parameter/motion_strength = 0.0
+shader_parameter/motion_speed1 = 0.03
+shader_parameter/motion_speed2 = 0.050000002375
 
 [node name="MainMenu" type="Control" unique_id=1063271667]
 layout_mode = 3
@@ -15,12 +30,13 @@ anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 150.0
-offset_top = 340.0
-offset_right = 246.0
-offset_bottom = 441.0
+offset_left = 118.0
+offset_top = 453.0
+offset_right = 214.0
+offset_bottom = 554.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.480001, 1)
 alignment = 1
 
 [node name="StartButton" type="Button" parent="UI" unique_id=921454860]
@@ -34,3 +50,30 @@ text = "QUIT"
 [node name="OptionsButton" type="Button" parent="UI" unique_id=1867963546]
 layout_mode = 2
 text = "Options"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1551567357]
+layer = -10
+
+[node name="Background" type="ColorRect" parent="CanvasLayer" unique_id=548688454]
+z_index = -100
+material = SubResource("ShaderMaterial_l72w3")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_ow34m")
+
+[node name="BoxContainer" type="BoxContainer" parent="." unique_id=1145048268]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 177.0
+offset_right = 153.0
+offset_bottom = 217.0
+scale = Vector2(3.4203086, 4.559291)
+
+[node name="Sprite2D" type="Sprite2D" parent="BoxContainer" unique_id=511869115]
+position = Vector2(-24.266815, 1.5353265)
+scale = Vector2(0.11119114, 0.078804076)
+texture = ExtResource("4_ow34m")
+centered = false

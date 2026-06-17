@@ -43,9 +43,20 @@ func _physics_process(delta: float) -> void:
 	# ⭐ Apply curvature if enabled
 	apply_curve(delta)
 
-	var collision = move_and_collide(direction * speed * delta)
-	if collision:
+	#var collision = move_and_collide(direction * speed * delta)
+	#if collision:
+		#handle_collision(collision)
+	var remaining_motion = direction * speed * delta
+
+	for i in range(4):
+		var collision = move_and_collide(remaining_motion)
+
+		if collision == null:
+			break
+
 		handle_collision(collision)
+
+		remaining_motion = collision.get_remainder()
 
 	check_out_of_bounds()
 
@@ -120,9 +131,13 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 			var t = clamp(hit_count / 10.0, 0.0, 1.0)
 			speed = lerp(base_speed, max_speed, t)
 
+			#if speed >= max_speed:
+				#get_parent().player_scored(1)
+				#reset_ball()
 			if speed >= max_speed:
+				is_stopped = true
 				get_parent().player_scored(1)
-				reset_ball()
+				return
 
 	else:
 		direction = direction.bounce(collision.get_normal()).normalized()
@@ -209,13 +224,32 @@ func apply_gravity_pull(paddle):
 
 
 # -------------------------------------------------------------------
+#func handle_paddle_bounce(paddle: Node2D, collision_point: Vector2) -> void:
+	#var paddle_shape: RectangleShape2D = paddle.get_node("CollisionShape2D").shape as RectangleShape2D
+	#var paddle_width: float = paddle_shape.extents.x * 2.0
+	#var offset_x: float = (collision_point.x - paddle.global_position.x) / (paddle_width / 2.0)
+	#offset_x = clamp(offset_x, -1.0, 1.0)
+#
+	#var max_bounce_angle = deg_to_rad(75.0)
+	#var bounce_angle = offset_x * max_bounce_angle
+	#var new_dir_y = -1.0 if paddle.name == "PlayerPaddle" else 1.0
+	#direction = Vector2(sin(bounce_angle), new_dir_y * cos(bounce_angle)).normalized()
 func handle_paddle_bounce(paddle: Node2D, collision_point: Vector2) -> void:
 	var paddle_shape: RectangleShape2D = paddle.get_node("CollisionShape2D").shape as RectangleShape2D
 	var paddle_width: float = paddle_shape.extents.x * 2.0
+
 	var offset_x: float = (collision_point.x - paddle.global_position.x) / (paddle_width / 2.0)
 	offset_x = clamp(offset_x, -1.0, 1.0)
 
 	var max_bounce_angle = deg_to_rad(75.0)
 	var bounce_angle = offset_x * max_bounce_angle
+
 	var new_dir_y = -1.0 if paddle.name == "PlayerPaddle" else 1.0
-	direction = Vector2(sin(bounce_angle), new_dir_y * cos(bounce_angle)).normalized()
+
+	direction = Vector2(
+		sin(bounce_angle),
+		new_dir_y * cos(bounce_angle)
+	).normalized()
+
+	# Force separation
+	position += direction * 10.0

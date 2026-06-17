@@ -8,7 +8,7 @@ var unlocked_levels: int = 1
 var current_level: int = 1
 
 # How many points needed to win a level
-var points_to_win: int = 1   # default
+var points_to_win: int = 5   # default
 
 # Save file path
 const SAVE_FILE := "user://save_data.save"

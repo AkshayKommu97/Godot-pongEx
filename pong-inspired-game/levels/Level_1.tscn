@@ -6,7 +6,9 @@
 [ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="4_jqswo"]
 [ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_m4ija"]
 [ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_btk8o"]
+[ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="6_h128h"]
 [ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_5uqhs"]
+[ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="9_h128h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
@@ -20,17 +22,36 @@ glow_intensity = 1.0
 glow_strength = 0.9
 glow_blend_mode = 0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h128h"]
+shader = ExtResource("6_h128h")
+shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
+shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
+shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
+shader_parameter/grid_size = 0.20000000298023
+shader_parameter/line_thickness = 0.002000000095
+shader_parameter/scroll_speed = 0.06800000323
+shader_parameter/motion_strength = 0.0
+shader_parameter/motion_speed1 = 0.03
+shader_parameter/motion_speed2 = 0.050000002375
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5uqhs"]
 shader = ExtResource("6_btk8o")
-shader_parameter/strength = 0.08
+shader_parameter/strength = 0.10000000149012
 shader_parameter/center = Vector2(0.5, 0.5)
-shader_parameter/radius = 0.25
+shader_parameter/radius = 0.3
 shader_parameter/aberration = 0.425
 shader_parameter/width = 0.04
-shader_parameter/feather = 0.135
+shader_parameter/feather = 0.2530000120175
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 0.0330000015675
+shader_parameter/glow_width = 0.0110000005225
 
 [node name="Game" type="Node2D" unique_id=1253919278]
 script = ExtResource("1_m266s")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=962679487]
+anchor_mode = 0
 
 [node name="PlayerPaddle" type="CharacterBody2D" parent="." unique_id=1674813748]
 position = Vector2(174, 700)
@@ -40,6 +61,7 @@ script = ExtResource("2_qmxy8")
 shape = SubResource("RectangleShape2D_5t517")
 
 [node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D" unique_id=769129729]
+z_index = 1
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
@@ -63,6 +85,7 @@ color = Color(0.910126, 0, 0.112919, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Ball" type="CharacterBody2D" parent="." unique_id=1663367629]
+z_index = 1
 position = Vector2(174, 330)
 script = ExtResource("4_jqswo")
 
@@ -74,6 +97,19 @@ shape = SubResource("CircleShape2D_1r5n3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1145769435]
 environment = SubResource("Environment_qovpe")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=630106007]
+layer = -10
+
+[node name="Background" type="ColorRect" parent="CanvasLayer" unique_id=159210401]
+z_index = -100
+material = SubResource("ShaderMaterial_h128h")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_h128h")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1110191007]
 layer = 10

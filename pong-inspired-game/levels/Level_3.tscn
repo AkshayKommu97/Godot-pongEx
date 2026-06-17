@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_fx3is"]
 [ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_b5dvu"]
 [ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_knst5"]
+[ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="8_sycs3"]
+[ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="9_vj71x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
@@ -33,8 +35,23 @@ shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
 shader_parameter/glow_intensity = 2.0
 shader_parameter/glow_width = 0.01
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_diqa7"]
+shader = ExtResource("8_sycs3")
+shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
+shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
+shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
+shader_parameter/grid_size = 0.20000000298023
+shader_parameter/line_thickness = 0.002000000095
+shader_parameter/scroll_speed = 0.06800000323
+shader_parameter/motion_strength = 0.0
+shader_parameter/motion_speed1 = 0.03
+shader_parameter/motion_speed2 = 0.050000002375
+
 [node name="Game" type="Node2D" unique_id=182480304]
 script = ExtResource("1_p84nf")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=240728731]
+anchor_mode = 0
 
 [node name="PlayerPaddle" type="CharacterBody2D" parent="." unique_id=1361516673]
 position = Vector2(174, 700)
@@ -106,3 +123,16 @@ offset_top = 4.0
 offset_right = 354.0
 offset_bottom = 35.0
 text = "Pause"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1411233958]
+layer = -10
+
+[node name="Background" type="ColorRect" parent="CanvasLayer" unique_id=1069640796]
+z_index = -100
+material = SubResource("ShaderMaterial_diqa7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_vj71x")
