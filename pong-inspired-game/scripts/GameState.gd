@@ -83,3 +83,16 @@ func load_progress() -> void:
 
 		if "points_to_win" in data:
 			points_to_win = data["points_to_win"]
+			
+func reset_game() -> void:
+	unlocked_levels = 1
+	current_level = 1
+	points_to_win = 5
+
+	if FileAccess.file_exists(SAVE_FILE):
+		DirAccess.remove_absolute(SAVE_FILE)
+
+	if FileAccess.file_exists("user://highscore.txt"):
+		DirAccess.remove_absolute("user://highscore.txt")
+
+	save_progress()

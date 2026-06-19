@@ -1,12 +1,16 @@
 extends Control
 
 @onready var vbox: VBoxContainer = $VBoxContainer
+@onready var back_button: TextureButton = $BackButton
 var game_font = preload("res://assets/fonts/Syncopate/Syncopate-Regular.ttf")
 func _ready() -> void:
+	back_button.pressed.connect(_on_back_button_pressed)
+	vbox.add_theme_constant_override("separation", 20)
 	# Create buttons for each level
 	for i in range(1, 11):
 		var button: Button = Button.new()
 		button.text = "Level %d" % i
+		button.flat=true
 		button.add_theme_font_override("font", game_font)
 		button.add_theme_font_size_override("font_size", 16)
 		
@@ -33,3 +37,8 @@ func _on_level_button_pressed(level_num: int) -> void:
 		await Transition.transition_to(level_path)
 	else:
 		push_error("Level file not found: " + level_path)
+
+func _on_back_button_pressed() -> void:
+	await Transition.transition_to(
+		"res://scenes/MainMenu.tscn"
+	)

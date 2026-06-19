@@ -8,6 +8,11 @@ var high_score: int = 0
 @onready var shockwave = $UI/ShockwaveFX
 const PaddleExplosionScene = preload("res://scenes/Effects/GPUParticles2D.tscn")
 @onready var pause_button: TextureButton = $UI/PauseButton
+@onready var pause_menu = $UI/PauseMenu
+@onready var resume_button: TextureButton = $UI/PauseMenu/Resume
+@onready var level_select_button: TextureButton = $UI/PauseMenu/Exit
+@onready var main_menu_button: TextureButton = $UI/PauseMenu/Home
+@onready var settings_button: TextureButton = $UI/PauseMenu/Settings
 
 var pause_icon = preload("res://assets/Icons/kenney_game-icons/PNG/White/1x/pause.png")
 var resume_icon = preload("res://assets/Icons/kenney_game-icons/PNG/White/1x/forward.png")
@@ -26,9 +31,54 @@ func _ready() -> void:
 	pause_button.mouse_entered.connect(_on_pause_hover)
 	pause_button.mouse_exited.connect(_on_pause_exit)
 
-	pause_button.process_mode = Node.PROCESS_MODE_ALWAYS
-	pause_button.modulate.a = 0.2
+	resume_button.pressed.connect(_on_resume_pressed)
+	level_select_button.pressed.connect(_on_level_select_pressed)
+	main_menu_button.pressed.connect(_on_main_menu_pressed)
+	settings_button.pressed.connect(_on_settings_pressed)
 
+	pause_button.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	pause_menu.process_mode = Node.PROCESS_MODE_ALWAYS
+	resume_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	level_select_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	main_menu_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	settings_button.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	pause_menu.visible = false
+
+	pause_button.modulate.a = 0.2
+	
+func _on_resume_pressed() -> void:
+
+	get_tree().paused = false
+	is_paused = false
+
+	pause_menu.visible = false
+
+	pause_button.texture_normal = pause_icon
+	pause_button.visible = true
+
+func _on_level_select_pressed() -> void:
+
+	get_tree().paused = false
+	is_paused = false
+
+	await Transition.transition_to(
+		"res://scenes/LevelSelect.tscn"
+	)
+	
+func _on_main_menu_pressed() -> void:
+
+	get_tree().paused = false
+	is_paused = false
+
+	await Transition.transition_to(
+		"res://scenes/MainMenu.tscn"
+	)
+	
+func _on_settings_pressed() -> void:
+
+	$UI/SettingsPanel.visible = true
 
 func _on_pause_hover():
 	pause_button.create_tween().tween_property(
@@ -70,11 +120,12 @@ func _on_pause_button_pressed() -> void:
 	is_paused = !is_paused
 
 	get_tree().paused = is_paused
-
-	if is_paused:
-		pause_button.texture_normal = resume_icon
-	else:
-		pause_button.texture_normal = pause_icon
+	pause_menu.visible = is_paused
+	#if is_paused:
+		#pause_button.texture_normal = resume_icon
+	#else:
+		#pause_button.texture_normal = pause_icon
+	pause_button.visible = !is_paused
 
 
 # --------------------------------------------------

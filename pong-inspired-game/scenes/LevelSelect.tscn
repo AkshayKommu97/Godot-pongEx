@@ -4,6 +4,8 @@
 [ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="2_6y6kj"]
 [ext_resource type="FontFile" uid="uid://jceoi35mrrcx" path="res://assets/fonts/Syncopate/Syncopate-Regular.ttf" id="2_ibarm"]
 [ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="3_ibarm"]
+[ext_resource type="Texture2D" uid="uid://dw8u56uod24ll" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/arrowLeft.png" id="5_fmuyb"]
+[ext_resource type="Texture2D" uid="uid://hlxh4jtko1br" path="res://assets/Icons/kenney_game-icons/PNG/Black/1x/arrowLeft.png" id="6_yxdfm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fmuyb"]
 shader = ExtResource("2_6y6kj")
@@ -27,9 +29,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 91.0
+offset_top = 39.0
 offset_right = 361.0
-offset_bottom = 717.0
+offset_bottom = 665.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -107,3 +109,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_ibarm")
+
+[node name="BackButton" type="TextureButton" parent="." unique_id=969870842]
+layout_mode = 0
+offset_left = 298.0
+offset_top = 657.0
+offset_right = 348.0
+offset_bottom = 707.0
+texture_normal = ExtResource("5_fmuyb")
+texture_pressed = ExtResource("6_yxdfm")
