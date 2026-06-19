@@ -25,9 +25,9 @@ func _ready():
 func _on_StartButton_pressed():
 	print("StartButton pressed")
 	# ✅ Load the LevelSelect scene instead of Game directly
-	var error = get_tree().change_scene_to_file("res://scenes/LevelSelect.tscn")
-	if error != OK:
-		print("Error changing scene: ", error)
+	await Transition.transition_to(
+		"res://scenes/LevelSelect.tscn"
+	)
 
 func _on_OptionsButton_pressed():
 	get_tree().change_scene_to_file("res://scenes/OptionsMenu.tscn")

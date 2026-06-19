@@ -1,0 +1,16 @@
+res://levels/Level_1.tscn
+res://shaders/shockwave.gdshader
+res://shaders/Grid.gdshader
+res://shaders/BalatroPaint.gdshader
+res://scenes/MainMenu.tscn
+res://scenes/Game.tscn
+res://scripts/Game.gd
+res://shaders/RoundedRect.gdshader
+res://scenes/LevelSelect.tscn
+res://scripts/LevelSelect.gd
+res://shaders/button.gdshader
+res://scripts/PlayerPaddle.gd
+res://scenes/Effects/screenTransition.tscn
+res://shaders/transition.gdshader
+res://scenes/Effects/screen_transition.gd
+res://scripts/MainMenu.gd

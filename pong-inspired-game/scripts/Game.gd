@@ -7,7 +7,10 @@ var high_score: int = 0
 
 @onready var shockwave = $UI/ShockwaveFX
 const PaddleExplosionScene = preload("res://scenes/Effects/GPUParticles2D.tscn")
+@onready var pause_button: TextureButton = $UI/PauseButton
 
+var pause_icon = preload("res://assets/Icons/kenney_game-icons/PNG/White/1x/pause.png")
+var resume_icon = preload("res://assets/Icons/kenney_game-icons/PNG/White/1x/forward.png")
 @onready var camera: Camera2D = $Camera2D
 
 var shake_strength := 0.0
@@ -18,8 +21,30 @@ func _ready() -> void:
 	load_high_score()
 	update_score_display()
 
-	$UI/PauseButton.pressed.connect(_on_pause_button_pressed)
-	$UI/PauseButton.process_mode = Node.PROCESS_MODE_ALWAYS
+	pause_button.pressed.connect(_on_pause_button_pressed)
+
+	pause_button.mouse_entered.connect(_on_pause_hover)
+	pause_button.mouse_exited.connect(_on_pause_exit)
+
+	pause_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	pause_button.modulate.a = 0.2
+
+
+func _on_pause_hover():
+	pause_button.create_tween().tween_property(
+		pause_button,
+		"modulate:a",
+		1.0,
+		0.15
+	)
+
+func _on_pause_exit():
+	pause_button.create_tween().tween_property(
+		pause_button,
+		"modulate:a",
+		0.2,
+		0.15
+	)
 
 
 func _process(delta):
@@ -43,8 +68,13 @@ func _process(delta):
 # --------------------------------------------------
 func _on_pause_button_pressed() -> void:
 	is_paused = !is_paused
+
 	get_tree().paused = is_paused
-	$UI/PauseButton.text = "Resume" if is_paused else "Pause"
+
+	if is_paused:
+		pause_button.texture_normal = resume_icon
+	else:
+		pause_button.texture_normal = pause_icon
 
 
 # --------------------------------------------------

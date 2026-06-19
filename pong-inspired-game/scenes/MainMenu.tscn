@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cpkhegm75qtdh" path="res://scripts/MainMenu.gd" id="1_1cuku"]
 [ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="2_2wh52"]
+[ext_resource type="FontFile" uid="uid://jceoi35mrrcx" path="res://assets/fonts/Syncopate/Syncopate-Regular.ttf" id="2_l72w3"]
 [ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="3_ow34m"]
 [ext_resource type="Texture2D" uid="uid://dfuiube6b1mwr" path="res://assets/Preview.png" id="4_ow34m"]
 
@@ -30,25 +31,31 @@ anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 118.0
+offset_left = 89.5
 offset_top = 453.0
-offset_right = 214.0
-offset_bottom = 554.0
+offset_right = 242.5
+offset_bottom = 549.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.480001, 1)
+scale = Vector2(1.1240475, 1.4306254)
 alignment = 1
 
 [node name="StartButton" type="Button" parent="UI" unique_id=921454860]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_l72w3")
+theme_override_font_sizes/font_size = 32
 text = "Start Game"
 
 [node name="QuitButton" type="Button" parent="UI" unique_id=433532000]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_l72w3")
+theme_override_font_sizes/font_size = 32
 text = "QUIT"
 
 [node name="OptionsButton" type="Button" parent="UI" unique_id=1867963546]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_l72w3")
+theme_override_font_sizes/font_size = 32
 text = "Options"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1551567357]

@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.6")
 [autoload]
 
 GameState="*res://scripts/GameState.gd"
+Transition="*uid://caf4y4dkoursx"
 
 [display]
 

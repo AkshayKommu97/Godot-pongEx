@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://caf4y4dkoursx"]
+
+[ext_resource type="Script" uid="uid://dxkfum6e0itee" path="res://scenes/Effects/screen_transition.gd" id="1_nbmye"]
+[ext_resource type="Shader" uid="uid://che1ymc3j3o83" path="res://shaders/transition.gdshader" id="2_diy0v"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t43kq"]
+shader = ExtResource("2_diy0v")
+shader_parameter/use_sprite_alpha = true
+shader_parameter/use_transition_texture = false
+shader_parameter/transition_type = 2
+shader_parameter/position = Vector2(0, 0)
+shader_parameter/invert = true
+shader_parameter/grid_size = Vector2(50, 0.5)
+shader_parameter/rotation_angle = 0.0
+shader_parameter/global_x_mirror = false
+shader_parameter/global_y_mirror = false
+shader_parameter/local_x_mirror = false
+shader_parameter/local_y_mirror = false
+shader_parameter/stagger = Vector2(0, 0)
+shader_parameter/cumulative_stagger_flip = false
+shader_parameter/cumulative_stagger = Vector2(0, 0)
+shader_parameter/stagger_frequency = Vector2i(2, 2)
+shader_parameter/flip_frequency = Vector2i(1, 1)
+shader_parameter/basic_feather = 0.0
+shader_parameter/use_mask_size = false
+shader_parameter/mask_size = Vector2(100, 100)
+shader_parameter/edges = 3
+shader_parameter/shape_feather = 0.0
+shader_parameter/sectors = 1
+shader_parameter/clock_feather = 0.8750000415625
+shader_parameter/progress = 0.0
+shader_parameter/progress_bias = Vector2(5, 0)
+
+[sub_resource type="Animation" id="Animation_nbmye"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRect:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_diy0v"]
+resource_name = "transition_in"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [30.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRect:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_t43kq"]
+resource_name = "transition_out"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.001, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 30.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ColorRect:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i7mpj"]
+_data = {
+&"RESET": SubResource("Animation_nbmye"),
+&"transition_in": SubResource("Animation_diy0v"),
+&"transition_out": SubResource("Animation_t43kq")
+}
+
+[node name="Transition" type="CanvasLayer" unique_id=630371672]
+layer = 100
+script = ExtResource("1_nbmye")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2021198495]
+material = SubResource("ShaderMaterial_t43kq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1855483072]
+libraries/ = SubResource("AnimationLibrary_i7mpj")

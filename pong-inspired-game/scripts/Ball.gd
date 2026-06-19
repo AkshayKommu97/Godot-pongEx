@@ -3,6 +3,18 @@ extends CharacterBody2D
 @export var speed: float = 300.0
 var direction: Vector2 = Vector2(0, -1)
 
+@onready var trail_particles: GPUParticles2D = $TrailParticles
+
+var dominance := 0
+
+const MAX_DOMINANCE := 10
+
+var player_color := Color.WHITE
+var cpu_color := Color.WHITE
+
+var trail_points: Array[Vector2] = []
+const MAX_TRAIL_POINTS := 20
+
 # 🔹 Speed increment variables
 var base_speed: float = 300.0
 var max_speed: float = 1000.0
@@ -35,7 +47,18 @@ func _ready() -> void:
 	add_to_group("ball")
 	randomize()
 	direction = Vector2(randf_range(-0.5, 0.5), -1).normalized()
+	var player_rect = get_parent().get_node(
+		"PlayerPaddle/CollisionShape2D/ColorRect"
+	)
 
+	var cpu_rect = get_parent().get_node(
+		"CPUPaddle/CollisionShape2D/ColorRect"
+	)
+
+	player_color = player_rect.color
+	cpu_color = cpu_rect.color
+
+	update_trail()
 
 func _physics_process(delta: float) -> void:
 	if is_stopped:
@@ -59,6 +82,7 @@ func _physics_process(delta: float) -> void:
 		remaining_motion = collision.get_remainder()
 
 	check_out_of_bounds()
+	update_trail()
 
 
 func check_out_of_bounds() -> void:
@@ -89,6 +113,9 @@ func reset_ball() -> void:
 	curve_strength = 0.0
 	curve_target = null
 	is_stopped = false
+	dominance = 0
+	update_trail()
+
 
 
 func handle_collision(collision: KinematicCollision2D) -> void:
@@ -97,6 +124,13 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 	if collider.name == "PlayerPaddle" or collider.name == "CPUPaddle":
 
 		if collider.name == "CPUPaddle":
+			dominance = clamp(
+				dominance - 1,
+				-MAX_DOMINANCE,
+				MAX_DOMINANCE
+			)
+
+			
 			if collider.get_node("CollisionShape2D/ColorRect"):
 				var color = collider.get_node("CollisionShape2D/ColorRect").color
 				print("CPU Paddle Color:", color)
@@ -130,6 +164,11 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 			hit_count += 1
 			var t = clamp(hit_count / 10.0, 0.0, 1.0)
 			speed = lerp(base_speed, max_speed, t)
+			dominance = clamp(
+				dominance + 1,
+				-MAX_DOMINANCE,
+				MAX_DOMINANCE
+			)
 
 			#if speed >= max_speed:
 				#get_parent().player_scored(1)
@@ -253,3 +292,52 @@ func handle_paddle_bounce(paddle: Node2D, collision_point: Vector2) -> void:
 
 	# Force separation
 	position += direction * 10.0
+	
+func update_trail():
+
+	var pm := trail_particles.process_material as ParticleProcessMaterial
+
+	if pm == null:
+		return
+
+	# Emit opposite direction of movement
+	pm.direction = Vector3(
+		-direction.x,
+		-direction.y,
+		0
+	)
+
+	var charge = clamp(
+		abs(dominance) / float(MAX_DOMINANCE),
+		0.0,
+		1.0
+	)
+
+	var base_color : Color
+
+	if dominance >= 0:
+		base_color = player_color
+	else:
+		base_color = cpu_color
+
+	# Start very dark and reach exact paddle color
+	var aura_color = Color(
+		base_color.r * (0.2 + charge * 0.8),
+		base_color.g * (0.2 + charge * 0.8),
+		base_color.b * (0.2 + charge * 0.8),
+		1.0
+	)
+
+	trail_particles.modulate = aura_color
+
+	# Grow trail size
+	pm.scale_min = lerp(0.5, 1.5, charge)
+	pm.scale_max = lerp(1.5, 3.5, charge)
+
+	# Grow trail density
+	trail_particles.amount = int(
+		lerp(20.0, 120.0, charge)
+	)
+	
+func pale_color(c: Color) -> Color:
+	return c.lerp(Color.WHITE, 0.85)
