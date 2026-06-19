@@ -1,19 +1,57 @@
 [gd_scene format=3 uid="uid://c0q7ssc6r23vh"]
 
 [ext_resource type="Script" uid="uid://csq23ftrwt85y" path="res://scripts/Game.gd" id="1_p84nf"]
+[ext_resource type="Shader" uid="uid://rpta6c2akai7" path="res://shaders/RoundedRect.gdshader" id="2_anm0f"]
 [ext_resource type="Script" uid="uid://c0ly11c7sug3n" path="res://scripts/PlayerPaddle.gd" id="2_med0s"]
 [ext_resource type="Script" uid="uid://c61gvb0e1kmmx" path="res://scripts/CPUPaddle.gd" id="3_gj5ao"]
 [ext_resource type="Script" uid="uid://csew2fgv6m6op" path="res://scripts/Ball.gd" id="4_hkd7r"]
-[ext_resource type="Texture2D" uid="uid://b2gbjl8mooaxr" path="res://assets/Ball.png" id="5_fx3is"]
 [ext_resource type="Shader" uid="uid://dxclp481a0l0m" path="res://shaders/shockwave.gdshader" id="6_b5dvu"]
+[ext_resource type="Texture2D" uid="uid://cpxvcfcafbew1" path="res://assets/arts/white-circle-svgrepo-com.png" id="7_anm0f"]
 [ext_resource type="Script" uid="uid://j7bpky4p3183" path="res://scripts/ShockwaveEffect.gd" id="7_knst5"]
+[ext_resource type="Texture2D" uid="uid://c2dotwrwcvabt" path="res://assets/arts/pixil-frame-0.png" id="7_snabu"]
 [ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="8_sycs3"]
 [ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="9_vj71x"]
+[ext_resource type="FontFile" uid="uid://cvmnc584ua0r3" path="res://assets/fonts/Syncopate/Syncopate-Bold.ttf" id="10_q68j4"]
+[ext_resource type="Texture2D" uid="uid://c3q4x3jb12h2u" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/pause.png" id="11_405jl"]
+[ext_resource type="Texture2D" uid="uid://qjxs3bg4dc4y" path="res://assets/Icons/kenney_game-icons/PNG/Black/1x/pause.png" id="12_anm0f"]
+[ext_resource type="Texture2D" uid="uid://bfj4td34vvbpv" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/forward.png" id="13_snabu"]
+[ext_resource type="Texture2D" uid="uid://b6sn4fr6n8ej1" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/exitLeft.png" id="14_87qso"]
+[ext_resource type="Texture2D" uid="uid://cakd8087n6xt5" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/home.png" id="15_yjqum"]
+[ext_resource type="Texture2D" uid="uid://c7m426blbg27" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/gear.png" id="16_f1638"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_anm0f"]
+shader = ExtResource("2_anm0f")
+shader_parameter/corner_radius = 0.25
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_snabu"]
+shader = ExtResource("2_anm0f")
+shader_parameter/corner_radius = 0.25
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_1r5n3"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_f1638"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_csyeq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.4809844), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_meyp6"]
+curve = SubResource("Curve_csyeq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gav4t"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 20.0
+angular_velocity_min = 19.999983
+angular_velocity_max = 79.999985
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_meyp6")
 
 [sub_resource type="Environment" id="Environment_qovpe"]
 background_mode = 3
@@ -21,19 +59,6 @@ glow_enabled = true
 glow_intensity = 1.0
 glow_strength = 0.9
 glow_blend_mode = 0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sycs3"]
-shader = ExtResource("6_b5dvu")
-shader_parameter/strength = 0.08
-shader_parameter/center = Vector2(0.5, 0.5)
-shader_parameter/radius = 0.25
-shader_parameter/aberration = 0.425
-shader_parameter/width = 0.04
-shader_parameter/feather = 0.135
-shader_parameter/active = 0.0
-shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
-shader_parameter/glow_intensity = 2.0
-shader_parameter/glow_width = 0.01
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_diqa7"]
 shader = ExtResource("8_sycs3")
@@ -46,6 +71,34 @@ shader_parameter/scroll_speed = 0.06800000323
 shader_parameter/motion_strength = 0.0
 shader_parameter/motion_speed1 = 0.03
 shader_parameter/motion_speed2 = 0.050000002375
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_csyeq"]
+shader = ExtResource("6_b5dvu")
+shader_parameter/strength = 0.10000000149012
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.3
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.2530000120175
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 0.0330000015675
+shader_parameter/glow_width = 0.0110000005225
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meyp6"]
+shader = ExtResource("8_sycs3")
+shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
+shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
+shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
+shader_parameter/grid_size = 0.06
+shader_parameter/line_thickness = 0.002
+shader_parameter/scroll_speed = 0.06
+shader_parameter/motion_strength = 0.007
+shader_parameter/motion_speed1 = 0.03
+shader_parameter/motion_speed2 = 0.015
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gav4t"]
+bg_color = Color(0, 0, 0, 1)
 
 [node name="Game" type="Node2D" unique_id=182480304]
 script = ExtResource("1_p84nf")
@@ -61,6 +114,7 @@ script = ExtResource("2_med0s")
 shape = SubResource("RectangleShape2D_5t517")
 
 [node name="ColorRect" type="ColorRect" parent="PlayerPaddle/CollisionShape2D" unique_id=2005763675]
+material = SubResource("ShaderMaterial_anm0f")
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
@@ -76,6 +130,7 @@ script = ExtResource("3_gj5ao")
 shape = SubResource("RectangleShape2D_5t517")
 
 [node name="ColorRect" type="ColorRect" parent="CPUPaddle/CollisionShape2D" unique_id=2076873066]
+material = SubResource("ShaderMaterial_snabu")
 offset_left = -40.0
 offset_top = -10.0
 offset_right = 40.0
@@ -87,42 +142,24 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(174, 330)
 script = ExtResource("4_hkd7r")
 
-[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=878944062]
-texture = ExtResource("5_fx3is")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=1634091754]
 shape = SubResource("CircleShape2D_1r5n3")
 
+[node name="TrailParticles" type="GPUParticles2D" parent="Ball" unique_id=45380302]
+z_index = -1
+material = SubResource("CanvasItemMaterial_f1638")
+scale = Vector2(4, 4)
+amount = 60
+texture = ExtResource("7_snabu")
+lifetime = 0.35000000000000003
+process_material = SubResource("ParticleProcessMaterial_gav4t")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=725908711]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("7_anm0f")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1149663346]
 environment = SubResource("Environment_qovpe")
-
-[node name="UI" type="CanvasLayer" parent="." unique_id=1282818095]
-layer = 10
-
-[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=1502401717]
-z_index = -10
-material = SubResource("ShaderMaterial_sycs3")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.165656, 0.165656, 0.165656, 1)
-script = ExtResource("7_knst5")
-
-[node name="ScoreLabel" type="Label" parent="UI" unique_id=207408004]
-offset_left = 9.0
-offset_top = 358.0
-offset_right = 54.0
-offset_bottom = 381.0
-text = "0 : 0"
-
-[node name="PauseButton" type="Button" parent="UI" unique_id=2134322067]
-offset_left = 299.0
-offset_top = 4.0
-offset_right = 354.0
-offset_bottom = 35.0
-text = "Pause"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1411233958]
 layer = -10
@@ -136,3 +173,83 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_vj71x")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1354673064]
+layer = 10
+
+[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=416804485]
+z_index = -10
+material = SubResource("ShaderMaterial_csyeq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.165656, 0.165656, 0.165656, 1)
+script = ExtResource("7_knst5")
+
+[node name="ScoreLabel" type="Label" parent="UI" unique_id=1592241688]
+modulate = Color(1, 1, 1, 0.49019608)
+offset_left = 9.0
+offset_top = 358.0
+offset_right = 54.0
+offset_bottom = 381.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("10_q68j4")
+theme_override_font_sizes/font_size = 24
+text = "0 : 0"
+
+[node name="PauseButton" type="TextureButton" parent="UI" unique_id=51100645]
+offset_left = 302.0
+offset_top = 338.0
+offset_right = 352.0
+offset_bottom = 388.0
+texture_normal = ExtResource("11_405jl")
+texture_pressed = ExtResource("12_anm0f")
+
+[node name="PauseMenu" type="Panel" parent="UI" unique_id=1698673874]
+material = SubResource("ShaderMaterial_meyp6")
+offset_left = 7.0
+offset_top = 247.0
+offset_right = 346.0
+offset_bottom = 505.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gav4t")
+
+[node name="Resume" type="TextureButton" parent="UI/PauseMenu" unique_id=1989177843]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 82.0
+offset_right = 196.0
+offset_bottom = 132.0
+texture_normal = ExtResource("13_snabu")
+
+[node name="Exit" type="TextureButton" parent="UI/PauseMenu" unique_id=162008859]
+layout_mode = 0
+offset_left = 249.0
+offset_top = 154.0
+offset_right = 299.0
+offset_bottom = 204.0
+texture_normal = ExtResource("14_87qso")
+
+[node name="Home" type="TextureButton" parent="UI/PauseMenu" unique_id=2083250901]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 156.0
+offset_right = 193.0
+offset_bottom = 206.0
+texture_normal = ExtResource("15_yjqum")
+
+[node name="Settings" type="TextureButton" parent="UI/PauseMenu" unique_id=20793582]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 156.0
+offset_right = 95.0
+offset_bottom = 206.0
+texture_normal = ExtResource("16_f1638")
+
+[node name="SettingsPanel" type="Panel" parent="UI" unique_id=1431760740]
+visible = false
+offset_left = 7.0
+offset_top = 290.0
+offset_right = 47.0
+offset_bottom = 330.0
