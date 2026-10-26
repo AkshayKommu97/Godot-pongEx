@@ -1,120 +1,114 @@
-[gd_scene format=3 uid="uid://h67gva2mr7wp"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" uid="uid://ryi6hdkbfuqq" path="res://scripts/LevelSelect.gd" id="1_bpasd"]
-[ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="2_6y6kj"]
-[ext_resource type="FontFile" uid="uid://jceoi35mrrcx" path="res://assets/fonts/Syncopate/Syncopate-Regular.ttf" id="2_ibarm"]
-[ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="3_ibarm"]
-[ext_resource type="Texture2D" uid="uid://dw8u56uod24ll" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/arrowLeft.png" id="5_fmuyb"]
-[ext_resource type="Texture2D" uid="uid://hlxh4jtko1br" path="res://assets/Icons/kenney_game-icons/PNG/Black/1x/arrowLeft.png" id="6_yxdfm"]
+[ext_resource type="Script" path="res://scripts/LevelSelect.gd" id="1_level_select"]
+[ext_resource type="Shader" path="res://shaders/Grid.gdshader" id="2_grid"]
+[ext_resource type="FontFile" path="res://assets/fonts/Syncopate/Syncopate-Regular.ttf" id="3_font_regular"]
+[ext_resource type="FontFile" path="res://assets/fonts/Syncopate/Syncopate-Bold.ttf" id="4_font_bold"]
+[ext_resource type="Script" path="res://scripts/BackGround.gd" id="5_background_script"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fmuyb"]
-shader = ExtResource("2_6y6kj")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_grid"]
+shader = ExtResource("2_grid")
 shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
 shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
 shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
-shader_parameter/grid_size = 0.20000000298023
-shader_parameter/line_thickness = 0.002000000095
-shader_parameter/scroll_speed = 0.06800000323
+shader_parameter/grid_size = 0.2
+shader_parameter/line_thickness = 0.002
+shader_parameter/scroll_speed = 0.068
 shader_parameter/motion_strength = 0.0
 shader_parameter/motion_speed1 = 0.03
-shader_parameter/motion_speed2 = 0.050000002375
+shader_parameter/motion_speed2 = 0.05
 
-[node name="LevelSelect" type="Control" unique_id=1420243726]
+[node name="LevelSelect" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_bpasd")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_level_select")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=288796426]
+[node name="Background" type="ColorRect" parent="."]
+z_index = -100
+material = SubResource("ShaderMaterial_grid")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_background_script")
+
+[node name="Content" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 39.0
-offset_right = 361.0
-offset_bottom = 665.0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Layout" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Content/Layout"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 46)
+theme_override_constants/separation = 10
+
+[node name="BackButton" type="Button" parent="Content/Layout/Header"]
+custom_minimum_size = Vector2(58, 40)
+layout_mode = 2
+focus_mode = 2
+text = "BACK"
+
+[node name="HeaderText" type="VBoxContainer" parent="Content/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
 alignment = 1
+theme_override_constants/separation = 1
 
-[node name="Level_1" type="Button" parent="VBoxContainer" unique_id=456239497]
-visible = false
-z_index = 1
+[node name="Title" type="Label" parent="Content/Layout/Header/HeaderText"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_1"
+theme_override_fonts/font = ExtResource("4_font_bold")
+theme_override_font_sizes/font_size = 22
+text = "SELECT LEVEL"
 
-[node name="Level_2" type="Button" parent="VBoxContainer" unique_id=1642119601]
-visible = false
+[node name="UnlockedLabel" type="Label" parent="Content/Layout/Header"]
+custom_minimum_size = Vector2(54, 0)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_2"
+size_flags_horizontal = 8
+horizontal_alignment = 2
+theme_override_fonts/font = ExtResource("4_font_bold")
+theme_override_font_sizes/font_size = 10
+text = "01 / 10"
 
-[node name="Level_3" type="Button" parent="VBoxContainer" unique_id=148021556]
-visible = false
+[node name="ProgressBar" type="ProgressBar" parent="Content/Layout"]
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_3"
+max_value = 10.0
+value = 1.0
+show_percentage = false
 
-[node name="Level_4" type="Button" parent="VBoxContainer" unique_id=131789778]
-visible = false
+[node name="CardScroll" type="ScrollContainer" parent="Content/Layout"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_4"
+size_flags_vertical = 3
+follow_focus = true
 
-[node name="Level_5" type="Button" parent="VBoxContainer" unique_id=2007264548]
-visible = false
+[node name="CardGrid" type="GridContainer" parent="Content/Layout/CardScroll"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_5"
+size_flags_horizontal = 3
+columns = 2
+theme_override_constants/h_separation = 9
+theme_override_constants/v_separation = 9
 
-[node name="Level_6" type="Button" parent="VBoxContainer" unique_id=756269031]
-visible = false
+[node name="NavigationHint" type="Label" parent="Content/Layout"]
+custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_6"
-
-[node name="Level_7" type="Button" parent="VBoxContainer" unique_id=270574236]
-visible = false
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_7"
-
-[node name="Level_8" type="Button" parent="VBoxContainer" unique_id=1869315479]
-visible = false
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_8"
-
-[node name="Level_9" type="Button" parent="VBoxContainer" unique_id=1820387416]
-visible = false
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_9"
-
-[node name="Level_10" type="Button" parent="VBoxContainer" unique_id=607420700]
-visible = false
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ibarm")
-text = "Level_10"
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1881087615]
-layer = -10
-
-[node name="Background" type="ColorRect" parent="CanvasLayer" unique_id=1739454604]
-z_index = -100
-material = SubResource("ShaderMaterial_fmuyb")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("3_ibarm")
-
-[node name="BackButton" type="TextureButton" parent="." unique_id=969870842]
-layout_mode = 0
-offset_left = 298.0
-offset_top = 657.0
-offset_right = 348.0
-offset_bottom = 707.0
-texture_normal = ExtResource("5_fmuyb")
-texture_pressed = ExtResource("6_yxdfm")
+theme_override_fonts/font = ExtResource("3_font_regular")
+theme_override_font_sizes/font_size = 8
+text = "ARROWS / D-PAD  |  ENTER TO PLAY"
+horizontal_alignment = 1
