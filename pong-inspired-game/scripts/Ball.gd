@@ -228,7 +228,7 @@ func handle_paddle_power(paddle_type: int, paddle: Node) -> void:
 func spawn_pinball_bumpers():
 	pass
 
-func spawn_paddle_clone(paddle):
+func spawn_paddle_clone(_paddle):
 	pass
 
 # ----------------------------------------------------------

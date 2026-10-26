@@ -201,7 +201,7 @@ func player_scored(player: int) -> void:
 
 
 
-func _trigger_shockwave(scorer: int, ball_pos: Vector2) -> void:
+func _trigger_shockwave(_scorer: int, ball_pos: Vector2) -> void:
 	if shockwave == null:
 		return
 
