@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/Effects/ImpactBurst.gd" id="1_burst"]
+
+[sub_resource type="Gradient" id="ImpactGradient"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="ImpactTexture"]
+gradient = SubResource("ImpactGradient")
+width = 2
+height = 2
+
+[sub_resource type="ParticleProcessMaterial" id="ImpactMaterial"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 38.0
+gravity = Vector3(0, 0, 0)
+scale_min = 1.0
+scale_max = 3.0
+
+[node name="ImpactBurst" type="GPUParticles2D"]
+amount = 10
+lifetime = 0.22
+one_shot = true
+explosiveness = 1.0
+emitting = false
+texture = SubResource("ImpactTexture")
+process_material = SubResource("ImpactMaterial")
+script = ExtResource("1_burst")

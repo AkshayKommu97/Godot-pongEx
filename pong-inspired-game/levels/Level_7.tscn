@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://b6sn4fr6n8ej1" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/exitLeft.png" id="16_fikcc"]
 [ext_resource type="Texture2D" uid="uid://cakd8087n6xt5" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/home.png" id="17_kifw5"]
 [ext_resource type="Texture2D" uid="uid://c7m426blbg27" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/gear.png" id="18_w5atb"]
+[ext_resource type="PackedScene" path="res://scenes/GameHUD.tscn" id="game_hud"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5t517"]
 size = Vector2(79.5, 19)
@@ -174,82 +175,4 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("9_qun4f")
 
-[node name="UI" type="CanvasLayer" parent="." unique_id=7268779]
-layer = 10
-
-[node name="ShockwaveFX" type="ColorRect" parent="UI" unique_id=1188754120]
-z_index = -10
-material = SubResource("ShaderMaterial_6gfti")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.165656, 0.165656, 0.165656, 1)
-script = ExtResource("7_2sp0u")
-
-[node name="ScoreLabel" type="Label" parent="UI" unique_id=209293611]
-modulate = Color(1, 1, 1, 0.49019608)
-offset_left = 9.0
-offset_top = 358.0
-offset_right = 54.0
-offset_bottom = 381.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("12_vdcaq")
-theme_override_font_sizes/font_size = 24
-text = "0 : 0"
-
-[node name="PauseButton" type="TextureButton" parent="UI" unique_id=178204377]
-offset_left = 302.0
-offset_top = 338.0
-offset_right = 352.0
-offset_bottom = 388.0
-texture_normal = ExtResource("13_rkmuw")
-texture_pressed = ExtResource("14_2t702")
-
-[node name="PauseMenu" type="Panel" parent="UI" unique_id=967418333]
-material = SubResource("ShaderMaterial_jii2u")
-offset_left = 7.0
-offset_top = 247.0
-offset_right = 346.0
-offset_bottom = 505.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_6yinj")
-
-[node name="Resume" type="TextureButton" parent="UI/PauseMenu" unique_id=2012357481]
-layout_mode = 0
-offset_left = 146.0
-offset_top = 82.0
-offset_right = 196.0
-offset_bottom = 132.0
-texture_normal = ExtResource("15_2d023")
-
-[node name="Exit" type="TextureButton" parent="UI/PauseMenu" unique_id=721200325]
-layout_mode = 0
-offset_left = 249.0
-offset_top = 154.0
-offset_right = 299.0
-offset_bottom = 204.0
-texture_normal = ExtResource("16_fikcc")
-
-[node name="Home" type="TextureButton" parent="UI/PauseMenu" unique_id=273442023]
-layout_mode = 0
-offset_left = 143.0
-offset_top = 156.0
-offset_right = 193.0
-offset_bottom = 206.0
-texture_normal = ExtResource("17_kifw5")
-
-[node name="Settings" type="TextureButton" parent="UI/PauseMenu" unique_id=1814038386]
-layout_mode = 0
-offset_left = 45.0
-offset_top = 156.0
-offset_right = 95.0
-offset_bottom = 206.0
-texture_normal = ExtResource("18_w5atb")
-
-[node name="SettingsPanel" type="Panel" parent="UI" unique_id=1724598863]
-visible = false
-offset_left = 7.0
-offset_top = 290.0
-offset_right = 47.0
-offset_bottom = 330.0
+[node name="UI" parent="." instance=ExtResource("game_hud")]

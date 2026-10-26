@@ -1,0 +1,335 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/ShockwaveEffect.gd" id="1_shockwave"]
+[ext_resource type="Script" path="res://scripts/PauseMenuInput.gd" id="9_pause_input"]
+[ext_resource type="Shader" path="res://shaders/shockwave.gdshader" id="2_shock_shader"]
+[ext_resource type="Texture2D" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/pause.png" id="3_pause"]
+[ext_resource type="Texture2D" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/forward.png" id="4_resume"]
+[ext_resource type="Texture2D" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/rewind.png" id="5_restart"]
+[ext_resource type="Texture2D" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/exitLeft.png" id="6_levels"]
+[ext_resource type="Texture2D" path="res://assets/Icons/kenney_game-icons/PNG/White/1x/home.png" id="7_home"]
+[ext_resource type="FontFile" path="res://assets/fonts/Syncopate/Syncopate-Bold.ttf" id="8_font"]
+
+[sub_resource type="ShaderMaterial" id="ShockwaveMaterial"]
+shader = ExtResource("2_shock_shader")
+shader_parameter/strength = 0.1
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.3
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.253
+shader_parameter/active = 0.0
+shader_parameter/glow_color = Vector3(0.3, 0.7, 1)
+shader_parameter/glow_intensity = 0.033
+shader_parameter/glow_width = 0.011
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.025, 0.04, 0.09, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.4, 0.78, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle"]
+bg_color = Color(0.055, 0.085, 0.16, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.32, 0.56, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonHoverStyle"]
+bg_color = Color(0.08, 0.15, 0.27, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.68, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="ScoreStyle"]
+bg_color = Color(0.025, 0.04, 0.09, 0.28)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1, 0.34, 0.67, 0.38)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 12.0
+content_margin_top = 7.0
+content_margin_right = 12.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxFlat" id="WinStyle"]
+bg_color = Color(0.025, 0.06, 0.12, 0.74)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.68, 1, 0.85)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[node name="UI" type="CanvasLayer"]
+layer = 10
+
+[node name="ShockwaveFX" type="ColorRect" parent="."]
+z_index = -10
+material = SubResource("ShockwaveMaterial")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.165656, 0.165656, 0.165656, 1)
+mouse_filter = 2
+script = ExtResource("1_shockwave")
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LevelLabel" type="Label" parent="HUD"]
+layout_mode = 0
+anchor_left = 0.15
+anchor_top = 0.52
+anchor_right = 0.30
+anchor_bottom = 0.60
+theme_override_colors/font_color = Color(0.68, 0.79, 0.96, 0.65)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 8
+text = "LV. 01"
+vertical_alignment = 1
+
+[node name="ScorePanel" type="PanelContainer" parent="HUD"]
+layout_mode = 0
+anchor_left = 0.32
+anchor_top = 0.515
+anchor_right = 0.70
+anchor_bottom = 0.60
+theme_override_styles/panel = SubResource("ScoreStyle")
+
+[node name="Scores" type="HBoxContainer" parent="HUD/ScorePanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="PlayerColumn" type="VBoxContainer" parent="HUD/ScorePanel/Scores"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayerName" type="Label" parent="HUD/ScorePanel/Scores/PlayerColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.64, 0.9, 0.68)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 7
+text = "YOU"
+horizontal_alignment = 1
+
+[node name="PlayerScore" type="Label" parent="HUD/ScorePanel/Scores/PlayerColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.97, 1, 0.9)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="ScoreDivider" type="Label" parent="HUD/ScorePanel/Scores"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.52, 0.85, 0.55)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 15
+text = ":"
+vertical_alignment = 1
+
+[node name="CPUColumn" type="VBoxContainer" parent="HUD/ScorePanel/Scores"]
+layout_mode = 2
+alignment = 1
+
+[node name="CPUName" type="Label" parent="HUD/ScorePanel/Scores/CPUColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.64, 0.9, 0.68)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 7
+text = "CPU"
+horizontal_alignment = 1
+
+[node name="CPUScore" type="Label" parent="HUD/ScorePanel/Scores/CPUColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.97, 1, 0.9)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+
+[node name="VictoryBanner" type="PanelContainer" parent="HUD"]
+visible = false
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.42
+anchor_right = 0.5
+anchor_bottom = 0.58
+offset_left = -128.0
+offset_right = 128.0
+theme_override_styles/panel = SubResource("WinStyle")
+
+[node name="Message" type="Label" parent="HUD/VictoryBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.97, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 13
+text = "LEVEL CLEARED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseButton" type="TextureButton" parent="HUD"]
+layout_mode = 0
+anchor_left = 0.74
+anchor_top = 0.535
+anchor_right = 0.74
+anchor_bottom = 0.535
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 40.0
+offset_bottom = 40.0
+focus_mode = 2
+tooltip_text = "Pause (Esc)"
+texture_normal = ExtResource("3_pause")
+texture_pressed = ExtResource("3_pause")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="PauseMenu" type="Control" parent="."]
+visible = false
+process_mode = 3
+layout_mode = 3
+script = ExtResource("9_pause_input")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.005, 0.012, 0.035, 0.78)
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="PauseMenu/CenterContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="MenuItems" type="VBoxContainer" parent="PauseMenu/CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="PauseMenu/CenterContainer/Panel/MenuItems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 16
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="PauseMenu/CenterContainer/Panel/MenuItems"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+icon = ExtResource("4_resume")
+text = "RESUME"
+theme_override_colors/font_color = Color(0.9, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/hover = SubResource("ButtonHoverStyle")
+theme_override_styles/pressed = SubResource("ButtonHoverStyle")
+theme_override_styles/focus = SubResource("ButtonHoverStyle")
+
+[node name="Restart" type="Button" parent="PauseMenu/CenterContainer/Panel/MenuItems"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+icon = ExtResource("5_restart")
+text = "RESTART"
+theme_override_colors/font_color = Color(0.9, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/hover = SubResource("ButtonHoverStyle")
+theme_override_styles/pressed = SubResource("ButtonHoverStyle")
+theme_override_styles/focus = SubResource("ButtonHoverStyle")
+
+[node name="Exit" type="Button" parent="PauseMenu/CenterContainer/Panel/MenuItems"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+icon = ExtResource("6_levels")
+text = "LEVEL SELECT"
+theme_override_colors/font_color = Color(0.9, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/hover = SubResource("ButtonHoverStyle")
+theme_override_styles/pressed = SubResource("ButtonHoverStyle")
+theme_override_styles/focus = SubResource("ButtonHoverStyle")
+
+[node name="Home" type="Button" parent="PauseMenu/CenterContainer/Panel/MenuItems"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+focus_mode = 2
+icon = ExtResource("7_home")
+text = "MAIN MENU"
+theme_override_colors/font_color = Color(0.9, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("ButtonStyle")
+theme_override_styles/hover = SubResource("ButtonHoverStyle")
+theme_override_styles/pressed = SubResource("ButtonHoverStyle")
+theme_override_styles/focus = SubResource("ButtonHoverStyle")

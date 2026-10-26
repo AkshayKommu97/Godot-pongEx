@@ -22,6 +22,7 @@ var _transitioning: bool = false
 
 func _ready() -> void:
 	_back_button.pressed.connect(_on_back_pressed)
+	_back_button.mouse_entered.connect(func(): FeedbackAudio.play_ui("ui_hover"))
 	_style_back_button()
 	_update_progress()
 	_build_level_cards()
@@ -45,7 +46,7 @@ func _update_progress() -> void:
 
 func _build_level_cards() -> void:
 	var unlocked_count: int = clampi(GameState.unlocked_levels, 1, LEVEL_COUNT)
-	var first_available: Button
+	var first_available: Button = null
 
 	for level in range(1, LEVEL_COUNT + 1):
 		var card: Button = _create_level_card(level, unlocked_count)
@@ -132,6 +133,9 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	ability_row.add_child(ability_label)
 
 	card.pressed.connect(_on_level_pressed.bind(level))
+	if not is_locked:
+		card.mouse_entered.connect(func(): FeedbackAudio.play_ui("ui_hover"))
+		card.focus_entered.connect(func(): FeedbackAudio.play_ui("ui_hover"))
 	return card
 
 
@@ -188,6 +192,9 @@ func _on_level_pressed(level: int) -> void:
 		return
 
 	_transitioning = true
+	FeedbackAudio.unlock_audio()
+	FeedbackAudio.play_ui("ui_select")
+	FeedbackAudio.play_transition()
 	GameState.current_level = level
 	await Transition.transition_to(level_path)
 
@@ -196,4 +203,5 @@ func _on_back_pressed() -> void:
 	if _transitioning:
 		return
 	_transitioning = true
+	FeedbackAudio.play_transition()
 	await Transition.transition_to(MAIN_MENU_SCENE)

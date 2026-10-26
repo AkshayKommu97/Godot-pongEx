@@ -1,40 +1,142 @@
-[gd_scene load_steps=3 format=3 uid="uid://be7ig7v6kru1q"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_lw7ss"]
-[ext_resource type="Texture2D" uid="uid://dqhemo1r1up1" path="res://assets/Board.png" id="2_ic1ud"]
+[ext_resource type="Script" path="res://scripts/OptionsMenu.gd" id="1_options"]
+[ext_resource type="Texture2D" uid="uid://dqhemo1r1up1" path="res://assets/Board.png" id="2_background"]
+[ext_resource type="FontFile" path="res://assets/fonts/Syncopate/Syncopate-Bold.ttf" id="3_font"]
+
+[sub_resource type="StyleBoxFlat" id="OptionsPanel"]
+bg_color = Color(0.025, 0.04, 0.09, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.16, 0.44, 0.8, 0.82)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 22.0
+content_margin_top = 20.0
+content_margin_right = 22.0
+content_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="OptionsButton"]
+bg_color = Color(0.06, 0.11, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.48, 0.86, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
 
 [node name="OptionsMenu" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_lw7ss")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_options")
 
 [node name="Background" type="TextureRect" parent="."]
-layout_mode = 0
-texture = ExtResource("2_ic1ud")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
 
-[node name="Title" type="Label" parent="."]
-layout_mode = 0
-offset_left = 400.0
-offset_right = 510.0
-offset_bottom = 23.0
-text = "Options Menu"
+[node name="Tint" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.01, 0.02, 0.06, 0.64)
+mouse_filter = 2
 
-[node name="VolumeSlider" type="HSlider" parent="."]
-layout_mode = 0
-offset_left = 400.0
-offset_top = 200.0
-offset_right = 408.0
-offset_bottom = 216.0
-value = 50.0
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 
-[node name="VolumeLabel" type="Label" parent="."]
-layout_mode = 0
-offset_left = 400.0
-offset_top = 150.0
-offset_right = 459.0
-offset_bottom = 173.0
-text = "Volume"
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("OptionsPanel")
 
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-text = "Back"
+[node name="Options" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Center/Panel/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 16
+text = "FEEDBACK"
+horizontal_alignment = 1
+
+[node name="VolumeLabel" type="Label" parent="Center/Panel/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.77, 0.94, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 9
+text = "EFFECTS VOLUME"
+
+[node name="VolumeSlider" type="HSlider" parent="Center/Panel/Options"]
+custom_minimum_size = Vector2(250, 24)
+layout_mode = 2
+focus_mode = 2
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 65.0
+
+[node name="ShakeToggle" type="CheckButton" parent="Center/Panel/Options"]
+custom_minimum_size = Vector2(250, 36)
+layout_mode = 2
+focus_mode = 2
+text = "SCREEN SHAKE"
+theme_override_colors/font_color = Color(0.83, 0.89, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 8
+
+[node name="EffectsLabel" type="Label" parent="Center/Panel/Options"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.77, 0.94, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 9
+text = "IMPACT EFFECTS"
+
+[node name="EffectsSlider" type="HSlider" parent="Center/Panel/Options"]
+custom_minimum_size = Vector2(250, 24)
+layout_mode = 2
+focus_mode = 2
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 80.0
+
+[node name="BackButton" type="Button" parent="Center/Panel/Options"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+text = "BACK"
+theme_override_colors/font_color = Color(0.92, 0.96, 1, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("OptionsButton")
+theme_override_styles/hover = SubResource("OptionsButton")
+theme_override_styles/pressed = SubResource("OptionsButton")
