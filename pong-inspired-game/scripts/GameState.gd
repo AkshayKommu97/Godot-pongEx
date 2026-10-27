@@ -6,14 +6,14 @@ const SAVE_FILE: String = "user://save_data.save"
 const LEVEL_ABILITIES: Dictionary = {
 	1: "Speed reset",
 	2: "Pinball bumpers",
-	3: "Paddle clone",
+	3: "Elastic Guard",
 	4: "Curved shot",
-	5: "Reverse controls",
-	6: "Multi-ball",
-	7: "Slow ball",
-	8: "Phantom ball",
-	9: "Gravity pull",
-	10: "Strong phantom"
+	5: "Gravity Furnace",
+	6: "Control Breaker",
+	7: "Neon Bumper",
+	8: "Phantom Protocol",
+	9: "Portal Gauntlet",
+	10: "Maximum Velocity"
 }
 
 var unlocked_levels: int = 1

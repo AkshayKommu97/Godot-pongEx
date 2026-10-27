@@ -1,2 +1,8 @@
 res://scripts/Bumper.gd
 res://scripts/FeedbackAudio.gd
+res://scripts/Ball.gd
+res://scripts/CPUPaddle.gd
+res://scripts/Game.gd
+res://scripts/GameState.gd
+res://scripts/PlayerPaddle.gd
+res://scripts/ChallengeDirector.gd

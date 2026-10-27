@@ -124,7 +124,7 @@ color = Color(1, 0, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="CPUPaddle" type="CharacterBody2D" parent="." unique_id=579705745]
-position = Vector2(174, 130)
+position = Vector2(174, 62)
 script = ExtResource("3_1jfuy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CPUPaddle" unique_id=1928537792]

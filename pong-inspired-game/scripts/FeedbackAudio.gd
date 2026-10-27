@@ -33,6 +33,8 @@ func _ready() -> void:
 	_load_settings()
 	for key in ["paddle_hit", "wall_ping", "speed_impact", "score", "level_start", "level_transition", "level_complete", "victory", "bumper", "ui_hover", "ui_select", "ui_press", "pause", "resume"] + _ability_files:
 		_streams[key] = load(AUDIO_ROOT + key + ".wav")
+	_streams["meter_rise"] = _build_sweep_tone(420.0, 920.0, 0.085)
+	_streams["meter_drain"] = _build_sweep_tone(880.0, 220.0, 0.28)
 	for i in EFFECT_POOL_SIZE:
 		var p := AudioStreamPlayer.new()
 		p.bus = "SFX"
@@ -134,6 +136,32 @@ func play_victory() -> void:
 
 func play_ui(name: String = "ui_select") -> void:
 	_play(name, 0.3, randf_range(0.98, 1.02), true)
+
+func play_meter_rise(progress: float) -> void:
+	var level := clampf(progress, 0.0, 1.0)
+	_play("meter_rise", lerpf(0.38, 0.54, level), lerpf(0.88, 1.18, level), true)
+
+func play_meter_drain() -> void:
+	_play("meter_drain", 0.48, 0.96, true)
+
+func _build_sweep_tone(start_hz: float, end_hz: float, duration: float) -> AudioStreamWAV:
+	const sample_rate := 22050
+	var sample_count := int(sample_rate * duration)
+	var pcm := PackedByteArray()
+	pcm.resize(sample_count * 2)
+	for i in sample_count:
+		var t := float(i) / sample_rate
+		var progress := float(i) / float(sample_count)
+		var frequency := lerpf(start_hz, end_hz, progress)
+		var envelope := minf(1.0, progress * 18.0) * pow(1.0 - progress, 1.5)
+		var value := int(sin(TAU * frequency * t) * envelope * 0.52 * 32767.0)
+		pcm.encode_s16(i * 2, value)
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = sample_rate
+	stream.stereo = false
+	stream.data = pcm
+	return stream
 
 func set_bus_volume(bus_name: String, value: float) -> void:
 	var v := clampf(value, 0.0, 1.0)

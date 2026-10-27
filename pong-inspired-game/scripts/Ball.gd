@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 @export var speed: float = 300.0
+@export_range(0.25, 0.9, 0.05) var level_10_serve_speed_ratio := 0.5
+@export_range(100.0, 2000.0, 50.0) var level_10_serve_acceleration := 420.0
 var direction: Vector2 = Vector2(0, -1)
 
 @onready var trail_particles: GPUParticles2D = $TrailParticles
@@ -25,6 +27,12 @@ var base_speed: float = 300.0
 var max_speed: float = 1000.0
 var hit_count: int = 0
 var is_stopped := false
+var is_echo_ball := false
+var player_point_claimed := false
+var portal_cooldown := 0.0
+var _level_10_serve_accelerating := false
+var _saved_collision_mask: int = 1
+var _sprite_rest_modulate := Color.WHITE
 
 # Anti-stuck margin
 const EDGE_MARGIN := 45.0
@@ -50,8 +58,13 @@ func apply_curve(delta: float):
 
 func _ready() -> void:
 	add_to_group("ball")
+	if GameState.current_level == 10:
+		speed = max_speed * level_10_serve_speed_ratio
+		_level_10_serve_accelerating = true
+	_saved_collision_mask = collision_mask
 	if ball_sprite:
 		sprite_rest_scale = ball_sprite.scale
+		_sprite_rest_modulate = ball_sprite.modulate
 	randomize()
 	direction = Vector2(randf_range(-0.5, 0.5), -1).normalized()
 	var player_rect = get_parent().get_node(
@@ -68,8 +81,22 @@ func _ready() -> void:
 	update_trail()
 
 func _physics_process(delta: float) -> void:
+	if GameState.current_level == 10:
+		if _level_10_serve_accelerating:
+			speed = move_toward(speed, max_speed, level_10_serve_acceleration * delta)
+			if speed >= max_speed:
+				_level_10_serve_accelerating = false
+		else:
+			speed = max_speed
+	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	if is_stopped:
 		return
+	var challenge: Node = get_parent().get_node_or_null("ChallengeDirector")
+	if challenge:
+		challenge.apply_ball_challenge(self, delta)
+		collision_mask = _saved_collision_mask
+		if ball_sprite:
+			ball_sprite.modulate = _sprite_rest_modulate
 	# â­ Apply curvature if enabled
 	if ability_trail_time > 0.0:
 		ability_trail_time = maxf(0.0, ability_trail_time - delta)
@@ -78,17 +105,25 @@ func _physics_process(delta: float) -> void:
 	#var collision = move_and_collide(direction * speed * delta)
 	#if collision:
 		#handle_collision(collision)
-	var remaining_motion = direction * speed * delta
-
-	for i in range(4):
-		var collision = move_and_collide(remaining_motion)
-
-		if collision == null:
-			break
-
-		handle_collision(collision)
-
-		remaining_motion = collision.get_remainder()
+	if GameState.current_level == 10:
+		var substep_count := maxi(1, ceili(speed * delta / 6.0))
+		var substep_delta := delta / float(substep_count)
+		for _step in range(substep_count):
+			var collision := move_and_collide(direction * speed * substep_delta)
+			if collision:
+				handle_collision(collision)
+			if is_stopped:
+				break
+	else:
+		var remaining_motion = direction * speed * delta
+		for _step in range(4):
+			var collision = move_and_collide(remaining_motion)
+			if collision == null:
+				break
+			handle_collision(collision)
+			if is_stopped and GameState.current_level == 7:
+				break
+			remaining_motion = collision.get_remainder()
 
 	check_out_of_bounds()
 	update_trail()
@@ -97,14 +132,16 @@ func _physics_process(delta: float) -> void:
 func check_out_of_bounds() -> void:
 	var screen_rect = get_viewport_rect()
 
-	if position.y < 0:
-		is_stopped = true
-		get_parent().player_scored(1)
-		#reset_ball()
-	elif position.y > screen_rect.size.y:
-		is_stopped = true
-		get_parent().player_scored(2)
-		#reset_ball()
+	if position.y < 0 or position.y > screen_rect.size.y:
+		if is_echo_ball:
+			position.y = clampf(position.y, 1.0, screen_rect.size.y - 1.0)
+			direction.y = -direction.y
+		else:
+			is_stopped = true
+			if position.y < 0:
+				get_parent().try_player_point(self)
+			else:
+				get_parent().player_scored(2)
 
 	if position.x < 0:
 		position.x = 0
@@ -121,23 +158,46 @@ func reset_ball() -> void:
 	if ball_sprite:
 		ball_sprite.scale = sprite_rest_scale
 		ball_sprite.rotation = 0.0
+		ball_sprite.modulate = _sprite_rest_modulate
+	collision_mask = _saved_collision_mask
 	direction = Vector2(randf_range(-0.5, 0.5), -1 if randf() < 0.5 else 1).normalized()
-	speed = base_speed
+	if GameState.current_level == 10:
+		speed = max_speed * level_10_serve_speed_ratio
+		_level_10_serve_accelerating = true
+	else:
+		speed = base_speed
 	hit_count = 0
+	player_point_claimed = false
+	portal_cooldown = 0.0
 	curve_strength = 0.0
 	curve_target = null
 	is_stopped = false
 	dominance = 0
+	if not is_echo_ball:
+		var game: Node = get_parent()
+		if game and game.has_method("update_rally_hit_counter"):
+			game.update_rally_hit_counter(0)
 	update_trail()
 
 
 
 func handle_collision(collision: KinematicCollision2D) -> void:
 	var collider = collision.get_collider()
+	if GameState.current_level == 7 and collider.is_in_group("level7_scoring_bumper"):
+		if not player_point_claimed:
+			var challenge: Node = get_parent().get_node_or_null("ChallengeDirector")
+			if challenge and challenge.has_method("hit_level7_bumper") and challenge.hit_level7_bumper(collider):
+				player_point_claimed = true
+				is_stopped = true
+				get_parent().player_scored(1)
+		return
 	
 	if collider.name == "PlayerPaddle" or collider.name == "CPUPaddle":
+		var challenge: Node = get_parent().get_node_or_null("ChallengeDirector")
+		if collider.name == "PlayerPaddle" and challenge and challenge.has_method("on_player_return"):
+			challenge.on_player_return(self)
 
-		if collider.name == "CPUPaddle":
+		if collider.name == "CPUPaddle" and not is_echo_ball:
 			dominance = clamp(
 				dominance - 1,
 				-MAX_DOMINANCE,
@@ -180,8 +240,15 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 		# ðŸ”¥ Player Paddle â€” speed boost power
 		if collider.name == "PlayerPaddle":
 			hit_count += 1
+			var game: Node = get_parent()
+			if game and game.has_method("update_rally_hit_counter"):
+				game.update_rally_hit_counter(hit_count)
 			var t = clamp(hit_count / 10.0, 0.0, 1.0)
-			speed = lerp(base_speed, max_speed, t)
+			if GameState.current_level == 10:
+				if not _level_10_serve_accelerating:
+					speed = max_speed
+			else:
+				speed = lerp(base_speed, max_speed, t)
 			dominance = clamp(
 				dominance + 1,
 				-MAX_DOMINANCE,
@@ -191,9 +258,10 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 			#if speed >= max_speed:
 				#get_parent().player_scored(1)
 				#reset_ball()
-			if speed >= max_speed:
+			var score_ready := hit_count >= 10 if GameState.current_level == 9 or GameState.current_level == 10 else speed >= max_speed
+			if score_ready and not is_echo_ball and GameState.current_level != 7:
 				is_stopped = true
-				get_parent().player_scored(1)
+				get_parent().try_player_point(self)
 				return
 
 	else:
@@ -205,7 +273,7 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 # ðŸ”¥ CPU PADDLE POWER LOGIC
 # -------------------------------------------------------------------
 
-func handle_paddle_power(paddle_type: int, paddle: Node) -> void:
+func handle_paddle_power(paddle_type: int, _paddle: Node) -> void:
 	match paddle_type:
 
 		1: # Blue - â­ Reset speed â­
@@ -214,29 +282,37 @@ func handle_paddle_power(paddle_type: int, paddle: Node) -> void:
 		2: # Green - â­ Spawn bumpers â­
 			spawn_pinball_bumpers()
 
-		3: # Yellow - Flash clone
-			spawn_paddle_clone(paddle)
+		3: # Yellow - temporary CPU paddle shrink
+			_notify_challenge_return()
+			if GameState.current_level == 3 and _paddle.has_method("trigger_yellow_shrink"):
+				_paddle.trigger_yellow_shrink()
 
 		4: # Orange - â­ CURVED SHOT â­ works
 			apply_spin()
 
 		5: # Magenta - â­ Reverse controls â­ works
-			reverse_player_controls()
+			pass
 
 		6: # Cyan - Multi-ball
-			spawn_extra_ball()
+			_notify_challenge_return()
 
 		7: # Purple - â­ Slow ball â­ works 
-			speed *= 0.7
+			pass
 
 		8: # Light Gray - Phantom ball
-			spawn_phantom_ball()
+			_notify_challenge_return()
 
 		9: # Brown - Gravity pull toward CPU
-			apply_gravity_pull(paddle)
+			pass
 
 		10: # White - Stronger phantom
-			spawn_stronger_phantom()
+			_notify_challenge_return()
+
+
+func _notify_challenge_return() -> void:
+	var director: Node = get_parent().get_node_or_null("ChallengeDirector")
+	if director and director.has_method("on_cpu_return"):
+		director.on_cpu_return(self)
 
 
 # -------------------------------------------------------------------
