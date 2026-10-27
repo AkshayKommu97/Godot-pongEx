@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="40" height="12" viewBox="0 0 40 12">
+  <defs>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00dfff"/>
+      <stop offset="0.68" stop-color="#79fff0"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <path d="M0 6 L25 4.6 L39 6 L25 7.4 Z" fill="url(#spark)"/>
+  <path d="M18 6 L31 5.6 L39 6 L31 6.4 Z" fill="#ffffff"/>
+</svg>

@@ -1,4 +1,4 @@
-﻿extends Node
+extends Node
 
 const SETTINGS_PATH := "user://feedback_settings.cfg"
 const EFFECT_POOL_SIZE := 12
@@ -208,5 +208,3 @@ func _save_settings() -> void:
 	c.set_value("feedback", "visual_intensity", visual_intensity)
 	c.set_value("feedback", "screen_shake", screen_shake_enabled)
 	c.save(SETTINGS_PATH)
-
-

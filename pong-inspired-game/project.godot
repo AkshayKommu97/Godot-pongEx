@@ -27,6 +27,11 @@ FeedbackAudio="*res://scripts/FeedbackAudio.gd"
 
 window/size/viewport_width=360
 window/size/viewport_height=720
+window/size/window_width_override=360
+window/size/window_height_override=720
+window/size/resizable=false
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
 window/handheld/orientation=1
 
 [project]
@@ -46,6 +51,7 @@ run/rendering/clear_color=Color(0.1, 0.1, 0.1, 1)
 [rendering]
 
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 viewport/hdr_2d=true
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

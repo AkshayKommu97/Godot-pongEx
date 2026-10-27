@@ -6,11 +6,18 @@
 radius = 15.4632
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u33wc"]
-bg_color = Color(0.198374, 0.690488, 0.582794, 1)
+bg_color = Color(0.025, 0.22, 0.29, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.16, 1, 0.91, 1)
 corner_radius_top_left = 30
 corner_radius_top_right = 30
 corner_radius_bottom_right = 30
 corner_radius_bottom_left = 30
+shadow_color = Color(0, 1, 0.82, 0.42)
+shadow_size = 2
 
 [sub_resource type="Gradient" id="Gradient_472yr"]
 offsets = PackedFloat32Array(0, 0.928571, 1)
@@ -20,6 +27,15 @@ colors = PackedColorArray(1.92523e-06, 0.811988, 0.959201, 1, 0.876623, 0.876623
 gradient = SubResource("Gradient_472yr")
 use_hdr = true
 fill_to = Vector2(0.559633, 0.00917431)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_core"]
+bg_color = Color(0.64, 1, 0.96, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.18, 1, 0.91, 0.55)
+shadow_size = 1
 
 [sub_resource type="Animation" id="Animation_y7cyv"]
 resource_name = "Glow"
@@ -32,7 +48,7 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0, 0),
-"points": PackedFloat32Array(1, -0.15, 0, 0.15, 0, 6, -0.15, 0, 0.15, 0, 1, -0.15, 0, 0.15, 0),
+"points": PackedFloat32Array(0.8, -0.15, 0, 0.15, 0, 2.4, -0.15, 0, 0.15, 0, 0.8, -0.15, 0, 0.15, 0),
 "times": PackedFloat32Array(0, 0.133333, 0.3)
 }
 
@@ -71,10 +87,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_u33wc")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 color = Color(0.027451, 1, 1, 1)
-energy = 6.0
+energy = 0.8
 range_z_min = -1
 range_z_max = 1
 texture = SubResource("GradientTexture2D_enbkf")
+
+[node name="Core" type="Panel" parent="."]
+show_behind_parent = true
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_core")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

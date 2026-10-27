@@ -1,10 +1,2 @@
-res://scenes/Effects/paddleExplosion.gd
-res://scripts/Game.gd
-res://scripts/Ball.gd
-res://scripts/CPUPaddle.gd
-res://scripts/GameState.gd
-res://scripts/LevelSelect.gd
 res://scripts/Bumper.gd
 res://scripts/FeedbackAudio.gd
-res://scripts/MainMenu.gd
-res://scripts/OptionsMenu.gd
