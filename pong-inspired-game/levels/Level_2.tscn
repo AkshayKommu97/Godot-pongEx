@@ -34,13 +34,6 @@ shader_parameter/corner_radius = 0.25
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1r5n3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_822t4"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5s4sp"]
 blend_mode = 1
 
@@ -162,20 +155,6 @@ shape = SubResource("CircleShape2D_1r5n3")
 [node name="Sprite2D" type="Sprite2D" parent="Ball" unique_id=1481363704]
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("6_ntb08")
-
-[node name="Panel" type="Panel" parent="Ball" unique_id=1339783532]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -15.0
-offset_top = -15.0
-offset_right = 15.0
-offset_bottom = 15.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(0, 0.05)
-theme_override_styles/panel = SubResource("StyleBoxFlat_822t4")
-metadata/_edit_use_anchors_ = true
 
 [node name="TrailParticles" type="GPUParticles2D" parent="Ball" unique_id=834384938]
 z_index = -1

@@ -464,6 +464,7 @@ func load_high_score() -> void:
 
 
 func on_player_wins() -> void:
+	GameState.mark_level_completed(GameState.current_level)
 	if GameState.current_level == GameState.unlocked_levels:
 		GameState.unlock_next_level()
 	_show_victory_feedback("LEVEL CLEARED")

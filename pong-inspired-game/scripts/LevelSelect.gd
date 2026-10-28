@@ -8,6 +8,7 @@ const COLOR_ACCENT: Color = Color(0.22, 0.62, 1.0)
 const COLOR_TEXT: Color = Color(0.91, 0.94, 1.0)
 const COLOR_MUTED: Color = Color(0.55, 0.62, 0.76)
 const COLOR_PANEL: Color = Color(0.035, 0.05, 0.11, 0.96)
+const COLOR_CLEARED: Color = Color(0.25, 0.92, 0.68)
 
 const REGULAR_FONT: FontFile = preload("res://assets/fonts/Syncopate/Syncopate-Regular.ttf")
 const BOLD_FONT: FontFile = preload("res://assets/fonts/Syncopate/Syncopate-Bold.ttf")
@@ -65,6 +66,7 @@ func _build_level_cards() -> void:
 
 func _create_level_card(level: int, unlocked_count: int) -> Button:
 	var is_locked: bool = level > unlocked_count
+	var is_completed: bool = GameState.is_level_completed(level)
 	var ability_name: String = GameState.get_level_ability(level)
 	var cpu_color: Color = GameState.get_cpu_color(level)
 	var card := Button.new()
@@ -75,7 +77,8 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	card.disabled = is_locked
 	card.tooltip_text = "Locked" if is_locked else "Play Level %d" % level
 	card.modulate = Color(0.62, 0.67, 0.79, 1.0) if is_locked else Color.WHITE
-	card.add_theme_stylebox_override("normal", _make_card_style(COLOR_PANEL, cpu_color.darkened(0.25)))
+	var normal_border := COLOR_CLEARED.darkened(0.15) if is_completed else cpu_color.darkened(0.25)
+	card.add_theme_stylebox_override("normal", _make_card_style(COLOR_PANEL, normal_border))
 	card.add_theme_stylebox_override("hover", _make_card_style(Color(0.07, 0.095, 0.18, 0.98), cpu_color))
 	card.add_theme_stylebox_override("focus", _make_card_style(Color(0.07, 0.095, 0.18, 0.98), COLOR_ACCENT))
 	card.add_theme_stylebox_override("pressed", _make_card_style(Color(0.11, 0.15, 0.27, 1.0), cpu_color.lightened(0.2)))
@@ -112,8 +115,10 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	top_row.add_child(spacer)
 
 	var lock_label := Label.new()
-	lock_label.text = "LOCKED" if is_locked else ""
+	lock_label.text = "LOCKED" if is_locked else "CLEARED" if is_completed else ""
 	_style_label(lock_label, 7, COLOR_MUTED, true)
+	if is_completed:
+		lock_label.add_theme_color_override("font_color", COLOR_CLEARED)
 	lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top_row.add_child(lock_label)

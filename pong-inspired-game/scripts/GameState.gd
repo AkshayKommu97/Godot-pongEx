@@ -20,6 +20,7 @@ var unlocked_levels: int = 1
 var current_level: int = 1
 var points_to_win: int = 5
 var show_final_credits: bool = false
+var completed_levels: Array[int] = []
 
 # One palette is shared by the level cards and the CPU paddle.
 var level_colors: Dictionary = {
@@ -46,6 +47,18 @@ func unlock_next_level() -> void:
 		save_progress()
 
 
+func mark_level_completed(level: int) -> void:
+	if level < 1 or level > LEVEL_COUNT or completed_levels.has(level):
+		return
+	completed_levels.append(level)
+	completed_levels.sort()
+	save_progress()
+
+
+func is_level_completed(level: int) -> bool:
+	return completed_levels.has(level)
+
+
 func get_cpu_color(level: int) -> Color:
 	return level_colors.get(level, Color.WHITE)
 
@@ -58,7 +71,8 @@ func save_progress() -> void:
 	var data := {
 		"unlocked_levels": unlocked_levels,
 		"current_level": current_level,
-		"points_to_win": points_to_win
+		"points_to_win": points_to_win,
+		"completed_levels": completed_levels
 	}
 	var file := FileAccess.open(SAVE_FILE, FileAccess.WRITE)
 	if file:
@@ -80,12 +94,26 @@ func load_progress() -> void:
 				current_level = int(data["current_level"])
 			if data.has("points_to_win"):
 				points_to_win = int(data["points_to_win"])
+			completed_levels.clear()
+			var saved_completed: Variant = data.get("completed_levels", [])
+			if data.has("completed_levels") and saved_completed is Array:
+				for level in saved_completed:
+					var completed_level := int(level)
+					if completed_level >= 1 and completed_level <= LEVEL_COUNT and not completed_levels.has(completed_level):
+						completed_levels.append(completed_level)
+			elif not data.has("completed_levels"):
+				# In older progress files, unlocking the next level proves the previous one was cleared.
+				for completed_level in range(1, clampi(unlocked_levels, 1, LEVEL_COUNT)):
+					completed_levels.append(completed_level)
+				save_progress()
+			completed_levels.sort()
 
 
 func reset_game() -> void:
 	unlocked_levels = 1
 	current_level = 1
 	points_to_win = 5
+	completed_levels.clear()
 	if FileAccess.file_exists(SAVE_FILE):
 		DirAccess.remove_absolute(SAVE_FILE)
 	if FileAccess.file_exists("user://highscore.txt"):

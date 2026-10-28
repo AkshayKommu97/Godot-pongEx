@@ -5,6 +5,7 @@ const BOLD_FONT: FontFile = preload("res://assets/fonts/Syncopate/Syncopate-Bold
 const HIGHLIGHT_SHADER: Shader = preload("res://shaders/highlight.gdshader")
 const LEVEL_SELECT_SCENE := "res://scenes/LevelSelect.tscn"
 const CREDITS_SCENE := "res://scenes/CreditsScreen.tscn"
+const GALLERY_SCENE := "res://scenes/GalleryScreen.tscn"
 const ICON_DIR := "res://assets/Icons/kenney_game-icons/PNG/White/1x/"
 
 var _button_list: Array[Button] = []
@@ -68,6 +69,7 @@ func _build_menu() -> void:
 	menu.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	layout.add_child(menu)
 	_add_menu_button(menu, "PLAY", "forward.png", _on_play_pressed, true)
+	_add_menu_button(menu, "BALL GALLERY", "trophy.png", _on_gallery_pressed)
 	_add_menu_button(menu, "OPTIONS", "gear.png", _on_options_pressed)
 	_add_menu_button(menu, "ABOUT", "information.png", _on_about_pressed)
 	_add_menu_button(menu, "QUIT", "exitLeft.png", _on_quit_pressed)
@@ -195,6 +197,11 @@ func _on_options_pressed() -> void:
 	FeedbackAudio.unlock_audio()
 	FeedbackAudio.play_ui("ui_select")
 	await Transition.transition_to("res://scenes/OptionsMenu.tscn")
+
+
+func _on_gallery_pressed() -> void:
+	FeedbackAudio.play_ui("ui_select")
+	await Transition.transition_to(GALLERY_SCENE)
 
 
 func _on_about_pressed() -> void:

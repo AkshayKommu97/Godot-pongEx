@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const BALL_SKIN = preload("res://scripts/BallSkin.gd")
+
 @export var speed: float = 300.0
 @export_range(0.25, 0.9, 0.05) var level_10_serve_speed_ratio := 0.35
 var direction: Vector2 = Vector2(0, -1)
@@ -64,6 +66,7 @@ func _ready() -> void:
 	if ball_sprite:
 		sprite_rest_scale = ball_sprite.scale
 		_sprite_rest_modulate = ball_sprite.modulate
+		ball_sprite.material = BALL_SKIN.create_material(GameState.current_level)
 	randomize()
 	direction = Vector2(randf_range(-0.5, 0.5), -1).normalized()
 	var player_rect = get_parent().get_node(
