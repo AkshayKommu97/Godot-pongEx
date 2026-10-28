@@ -1,1 +1,7 @@
 res://scripts/PlayerPaddle.gd
+res://scripts/ChallengeDirector.gd
+res://scripts/GameState.gd
+res://scripts/Game.gd
+res://scripts/MainMenu.gd
+res://scripts/LevelSelect.gd
+res://scripts/Ball.gd

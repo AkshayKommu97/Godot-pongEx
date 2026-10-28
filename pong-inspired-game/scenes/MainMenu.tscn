@@ -1,127 +1,37 @@
-[gd_scene format=3 uid="uid://drjx34fgevmdc"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" uid="uid://cpkhegm75qtdh" path="res://scripts/MainMenu.gd" id="1_1cuku"]
-[ext_resource type="Shader" uid="uid://e3gqgibnxkds" path="res://shaders/Grid.gdshader" id="2_2wh52"]
-[ext_resource type="FontFile" uid="uid://jceoi35mrrcx" path="res://assets/fonts/Syncopate/Syncopate-Regular.ttf" id="2_l72w3"]
-[ext_resource type="Script" uid="uid://cm8xvlgq48qtb" path="res://scripts/BackGround.gd" id="3_ow34m"]
-[ext_resource type="Shader" uid="uid://d1hd2jerqxlkv" path="res://shaders/highlight.gdshader" id="5_826wr"]
-[ext_resource type="FontFile" uid="uid://cvmnc584ua0r3" path="res://assets/fonts/Syncopate/Syncopate-Bold.ttf" id="6_ucygd"]
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_menu"]
+[ext_resource type="Shader" path="res://shaders/Grid.gdshader" id="2_grid"]
+[ext_resource type="Script" path="res://scripts/BackGround.gd" id="3_background"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_l72w3"]
-shader = ExtResource("2_2wh52")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_grid"]
+shader = ExtResource("2_grid")
 shader_parameter/bg_color = Color(0.03, 0.03, 0.07, 1)
 shader_parameter/line_color = Color(0.1, 0.1, 0.3, 1)
 shader_parameter/glow_color = Color(0.2, 0.4, 1, 1)
-shader_parameter/grid_size = 0.20000000298023
-shader_parameter/line_thickness = 0.002000000095
-shader_parameter/scroll_speed = 0.06800000323
+shader_parameter/grid_size = 0.2
+shader_parameter/line_thickness = 0.002
+shader_parameter/scroll_speed = 0.068
 shader_parameter/motion_strength = 0.0
 shader_parameter/motion_speed1 = 0.03
-shader_parameter/motion_speed2 = 0.050000002375
+shader_parameter/motion_speed2 = 0.05
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_826wr"]
-shader = ExtResource("5_826wr")
-shader_parameter/Line_Smoothness = 0.045
-shader_parameter/Line_Width = 0.09
-shader_parameter/Brightness = 3.0
-shader_parameter/Rotation_deg = 30.0
-shader_parameter/Distortion = 1.8
-shader_parameter/Speed = 0.7
-shader_parameter/Position = 0.0
-shader_parameter/Position_Min = 0.25
-shader_parameter/Position_Max = 0.5
-shader_parameter/Alpha = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ucygd"]
-bg_color = Color(0.7528655, 0.5226626, 0.15074039, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_left = 20
-
-[node name="MainMenu" type="Control" unique_id=1063271667]
+[node name="MainMenu" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_1cuku")
-
-[node name="Background" type="Sprite2D" parent="." unique_id=1800179089]
-
-[node name="UI" type="VBoxContainer" parent="." unique_id=1781305559]
-layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 29.0
-offset_top = 293.0
-offset_right = 295.0
-offset_bottom = 421.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.1240475, 1.4306254)
-alignment = 1
+script = ExtResource("1_menu")
 
-[node name="StartButton" type="Button" parent="UI" unique_id=921454860]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_l72w3")
-theme_override_font_sizes/font_size = 16
-text = "Start Game"
-flat = true
-
-[node name="QuitButton" type="Button" parent="UI" unique_id=433532000]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_l72w3")
-theme_override_font_sizes/font_size = 16
-text = "QUIT"
-flat = true
-
-[node name="OptionsButton" type="Button" parent="UI" unique_id=1867963546]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_l72w3")
-theme_override_font_sizes/font_size = 16
-text = "Options"
-flat = true
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1551567357]
-layer = -10
-
-[node name="Background" type="ColorRect" parent="CanvasLayer" unique_id=548688454]
+[node name="Background" type="ColorRect" parent="."]
 z_index = -100
-material = SubResource("ShaderMaterial_l72w3")
+material = SubResource("ShaderMaterial_grid")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.8, 0.61960787, 0.3019608, 1)
-script = ExtResource("3_ow34m")
-
-[node name="Label" type="Label" parent="." unique_id=103682700]
-layout_mode = 0
-offset_left = 55.0
-offset_top = 200.0
-offset_right = 308.0
-offset_bottom = 263.0
-theme_override_fonts/font = ExtResource("6_ucygd")
-theme_override_font_sizes/font_size = 64
-text = "PONG"
-
-[node name="Panel" type="Panel" parent="Label" unique_id=145898773]
-z_index = -1
-material = SubResource("ShaderMaterial_826wr")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ucygd")
-
-[node name="Label2" type="Label" parent="." unique_id=1900442319]
-layout_mode = 0
-offset_left = 290.0
-offset_top = 254.0
-offset_right = 401.0
-offset_bottom = 317.0
-theme_override_fonts/font = ExtResource("6_ucygd")
-theme_override_font_sizes/font_size = 18
-text = "EX"
+mouse_filter = 2
+script = ExtResource("3_background")

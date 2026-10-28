@@ -468,6 +468,10 @@ func on_player_wins() -> void:
 		GameState.unlock_next_level()
 	_show_victory_feedback("LEVEL CLEARED")
 	await get_tree().create_timer(1.0).timeout
+	if GameState.current_level == GameState.LEVEL_COUNT:
+		GameState.show_final_credits = true
+		await Transition.transition_to("res://scenes/CreditsScreen.tscn")
+		return
 	get_tree().change_scene_to_file(LEVEL_SELECT_SCENE)
 
 

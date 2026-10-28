@@ -46,6 +46,8 @@ func _update_progress() -> void:
 
 func _build_level_cards() -> void:
 	var unlocked_count: int = clampi(GameState.unlocked_levels, 1, LEVEL_COUNT)
+	var preferred_level := clampi(GameState.current_level, 1, unlocked_count)
+	var preferred_card: Button = null
 	var first_available: Button = null
 
 	for level in range(1, LEVEL_COUNT + 1):
@@ -53,9 +55,12 @@ func _build_level_cards() -> void:
 		_card_grid.add_child(card)
 		if level <= unlocked_count and first_available == null:
 			first_available = card
+		if level == preferred_level:
+			preferred_card = card
 
-	if first_available != null:
-		first_available.call_deferred("grab_focus")
+	var focus_card := preferred_card if preferred_card != null else first_available
+	if focus_card != null:
+		focus_card.call_deferred("grab_focus")
 
 
 func _create_level_card(level: int, unlocked_count: int) -> Button:
@@ -64,7 +69,7 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	var cpu_color: Color = GameState.get_cpu_color(level)
 	var card := Button.new()
 	card.name = "LevelCard%02d" % level
-	card.custom_minimum_size = Vector2(0, 86)
+	card.custom_minimum_size = Vector2(0, 96)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.focus_mode = Control.FOCUS_ALL
 	card.disabled = is_locked
@@ -86,7 +91,7 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	card.add_child(inset)
 
 	var content := VBoxContainer.new()
-	content.add_theme_constant_override("separation", 8)
+	content.add_theme_constant_override("separation", 5)
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	inset.add_child(content)
 
@@ -97,7 +102,7 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 
 	var level_label := Label.new()
 	level_label.text = "LEVEL %02d" % level
-	_style_label(level_label, 10, COLOR_MUTED, true)
+	_style_label(level_label, 9, COLOR_MUTED, true)
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top_row.add_child(level_label)
 
@@ -108,7 +113,7 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 
 	var lock_label := Label.new()
 	lock_label.text = "LOCKED" if is_locked else ""
-	_style_label(lock_label, 8, COLOR_MUTED, true)
+	_style_label(lock_label, 7, COLOR_MUTED, true)
 	lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top_row.add_child(lock_label)
@@ -127,8 +132,11 @@ func _create_level_card(level: int, unlocked_count: int) -> Button:
 	var ability_label := Label.new()
 	ability_label.text = ability_name
 	ability_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_style_label(ability_label, 12, COLOR_TEXT, true)
-	ability_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	ability_label.custom_minimum_size.y = 24
+	ability_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	ability_label.max_lines_visible = 2
+	ability_label.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	_style_label(ability_label, 9, COLOR_TEXT, true)
 	ability_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ability_row.add_child(ability_label)
 

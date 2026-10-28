@@ -1,8 +1,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 300.0
-@export_range(0.25, 0.9, 0.05) var level_10_serve_speed_ratio := 0.5
-@export_range(100.0, 2000.0, 50.0) var level_10_serve_acceleration := 420.0
+@export_range(0.25, 0.9, 0.05) var level_10_serve_speed_ratio := 0.35
 var direction: Vector2 = Vector2(0, -1)
 
 @onready var trail_particles: GPUParticles2D = $TrailParticles
@@ -30,7 +29,7 @@ var is_stopped := false
 var is_echo_ball := false
 var player_point_claimed := false
 var portal_cooldown := 0.0
-var _level_10_serve_accelerating := false
+var _level_10_waiting_for_paddle_hit := false
 var _saved_collision_mask: int = 1
 var _sprite_rest_modulate := Color.WHITE
 
@@ -60,7 +59,7 @@ func _ready() -> void:
 	add_to_group("ball")
 	if GameState.current_level == 10:
 		speed = max_speed * level_10_serve_speed_ratio
-		_level_10_serve_accelerating = true
+		_level_10_waiting_for_paddle_hit = true
 	_saved_collision_mask = collision_mask
 	if ball_sprite:
 		sprite_rest_scale = ball_sprite.scale
@@ -82,11 +81,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if GameState.current_level == 10:
-		if _level_10_serve_accelerating:
-			speed = move_toward(speed, max_speed, level_10_serve_acceleration * delta)
-			if speed >= max_speed:
-				_level_10_serve_accelerating = false
-		else:
+		if not _level_10_waiting_for_paddle_hit:
 			speed = max_speed
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	if is_stopped:
@@ -132,7 +127,12 @@ func _physics_process(delta: float) -> void:
 func check_out_of_bounds() -> void:
 	var screen_rect = get_viewport_rect()
 
-	if position.y < 0 or position.y > screen_rect.size.y:
+	if position.y < 0 and GameState.current_level == 10:
+		# Level 10's top boundary is a wall: a CPU miss keeps the rally and hit meter alive.
+		position.y = absf(position.y)
+		direction.y = absf(direction.y)
+		_emit_wall_feedback(Vector2.DOWN)
+	elif position.y < 0 or position.y > screen_rect.size.y:
 		if is_echo_ball:
 			position.y = clampf(position.y, 1.0, screen_rect.size.y - 1.0)
 			direction.y = -direction.y
@@ -143,14 +143,24 @@ func check_out_of_bounds() -> void:
 			else:
 				get_parent().player_scored(2)
 
-	if position.x < 0:
-		position.x = 0
-		direction.x *= -1
-		_emit_wall_feedback(Vector2.RIGHT)
-	elif position.x > screen_rect.size.x:
-		position.x = screen_rect.size.x
-		direction.x *= -1
-		_emit_wall_feedback(Vector2.LEFT)
+	if GameState.current_level == 10:
+		if position.x < 10.0:
+			position.x = 10.0
+			direction.x = absf(direction.x)
+			_emit_wall_feedback(Vector2.RIGHT)
+		elif position.x > screen_rect.size.x - 10.0:
+			position.x = screen_rect.size.x - 10.0
+			direction.x = -absf(direction.x)
+			_emit_wall_feedback(Vector2.LEFT)
+	else:
+		if position.x < 0:
+			position.x = 0
+			direction.x *= -1
+			_emit_wall_feedback(Vector2.RIGHT)
+		elif position.x > screen_rect.size.x:
+			position.x = screen_rect.size.x
+			direction.x *= -1
+			_emit_wall_feedback(Vector2.LEFT)
 
 
 func reset_ball() -> void:
@@ -163,7 +173,7 @@ func reset_ball() -> void:
 	direction = Vector2(randf_range(-0.5, 0.5), -1 if randf() < 0.5 else 1).normalized()
 	if GameState.current_level == 10:
 		speed = max_speed * level_10_serve_speed_ratio
-		_level_10_serve_accelerating = true
+		_level_10_waiting_for_paddle_hit = true
 	else:
 		speed = base_speed
 	hit_count = 0
@@ -235,6 +245,9 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 			# ---------------------------------------------------
 
 		handle_paddle_bounce(collider, collision.get_position())
+		if GameState.current_level == 10 and _level_10_waiting_for_paddle_hit:
+			speed = max_speed
+			_level_10_waiting_for_paddle_hit = false
 		_emit_paddle_feedback(collider, collision)
 
 		# ðŸ”¥ Player Paddle â€” speed boost power
@@ -245,8 +258,8 @@ func handle_collision(collision: KinematicCollision2D) -> void:
 				game.update_rally_hit_counter(hit_count)
 			var t = clamp(hit_count / 10.0, 0.0, 1.0)
 			if GameState.current_level == 10:
-				if not _level_10_serve_accelerating:
-					speed = max_speed
+				speed = max_speed
+				_level_10_waiting_for_paddle_hit = false
 			else:
 				speed = lerp(base_speed, max_speed, t)
 			dominance = clamp(

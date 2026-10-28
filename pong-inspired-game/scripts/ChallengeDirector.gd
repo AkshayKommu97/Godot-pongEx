@@ -1,9 +1,8 @@
 ﻿extends Node2D
 const HUD_FONT: FontFile = preload("res://assets/fonts/Syncopate/Syncopate-Bold.ttf")
-const GATE_Y := [238.0, 478.0]
-const GATE_GAP := 112.0
 const LEVEL_7_BUMPER_SIZES: Array[Vector2] = [Vector2(82.0, 18.0), Vector2(64.0, 18.0), Vector2(48.0, 18.0), Vector2(34.0, 18.0), Vector2(20.0, 20.0)]
 const LEVEL_7_BUMPER_GAP := 12.0
+const BOSS_ATTACK_BALL_SCRIPT = preload("res://scripts/BossAttackBall.gd")
 @export_range(10.0, 60.0, 1.0) var portal_exit_angle_min := 20.0
 @export_range(20.0, 70.0, 1.0) var portal_exit_angle_max := 55.0
 var level_id := 0
@@ -16,8 +15,6 @@ var _reverse_just_armed := false
 var _previous_gate_y: Dictionary = {}
 var _gravity_charge := false
 var _rally_flip := false
-var _rally_gates := 0
-var _gate_centers := [88.0, 272.0]
 var _portal_positions: Array[Vector2] = [Vector2(82.0, 285.0), Vector2(278.0, 435.0)]
 var _portal_flash_left := 0.0
 var _portal_flash_position := Vector2.ZERO
@@ -26,6 +23,10 @@ var _well_x := 180.0
 var _level7_bumper_rects: Array[Rect2] = []
 var _level7_bumper_active: Array[bool] = []
 var _level7_respawn_left := 0.0
+var _level8_core: Area2D
+var _level8_core_exposed := false
+var _level8_attack_cooldown := 1.4
+var _level8_attack_ball: CharacterBody2D
 func _ready() -> void:
 	level_id = GameState.current_level
 	z_index = -1
@@ -34,7 +35,7 @@ func _ready() -> void:
 	_hud.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER; _hud.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_hud.add_theme_font_override("font", HUD_FONT); _hud.add_theme_font_size_override("font_size", 8)
 	_hud.add_theme_color_override("font_color", GameState.get_cpu_color(level_id).lightened(0.35)); _hud.mouse_filter = Control.MOUSE_FILTER_IGNORE; canvas.add_child(_hud)
-	if level_id == 8: _create_gates()
+	if level_id == 8: _setup_level8_boss()
 	if level_id == 9: _create_portals()
 	if level_id == 7: _create_level7_scoring_bumpers()
 	_set_notice(_title(), 1.7)
@@ -43,7 +44,7 @@ func _title() -> String:
 		5: return "GRAVITY FURNACE"
 		6: return "CONTROL BREAKER"
 		7: return "NEON BUMPER"
-		8: return "PHANTOM PROTOCOL"
+		8: return "CORE BREAKER"
 		9: return "PORTAL GAUNTLET"
 	return ""
 func _process(delta: float) -> void:
@@ -53,6 +54,8 @@ func _process(delta: float) -> void:
 		_level7_respawn_left = maxf(0.0, _level7_respawn_left - delta)
 		if _level7_respawn_left == 0.0 and level_id == 7:
 			_create_level7_scoring_bumpers()
+	if level_id == 8:
+		_process_level8_boss(delta)
 	if reverse_warning>0:
 		reverse_warning=maxf(0,reverse_warning-delta)
 		if reverse_warning==0 and _reverse_just_armed: reverse_left=1.65; _reverse_just_armed=false; _set_notice("CONTROLS REVERSED",reverse_left)
@@ -64,7 +67,7 @@ func _update_hud() -> void:
 	elif level_id==5: _hud.text="CORE CHARGED // SCORE" if _gravity_charge else "PASS THE MOVING CORE // SCORE"
 	elif level_id==6: _hud.text="RETURN DURING CONTROL FLIP"
 	elif level_id==7: _hud.text="HIT THE NEON BUMPER TO SCORE"
-	elif level_id==8: _hud.text="GATES // %d / 2" % _bits(_rally_gates)
+	elif level_id==8: _hud.text = "CORE OPEN // RETURN THE RED BALL" if _level8_core_exposed else "BOSS ATTACK // RETURN IT TO THE CORE"
 	elif level_id==9:
 		var main_ball := get_parent().get_node_or_null("Ball")
 		_hud.text = "PORTALS // %d / 10 HITS" % mini(main_ball.hit_count, 10) if main_ball else "PORTALS // SCORE AT 10 HITS"
@@ -82,12 +85,6 @@ func apply_ball_challenge(ball: CharacterBody2D,delta: float) -> void:
 		_well_x=180+78*sin(elapsed*0.72); var pull=Vector2(_well_x,360)-ball.position; var dist=pull.length(); var radius=190.0
 		if dist<radius: ball.direction=(ball.direction+pull.normalized()*3.4*pow(1-dist/radius,1.4)*delta).normalized()
 		if level_id==5 and dist<58: _gravity_charge=true
-	if level_id==8: _track_gates(ball)
-func _track_gates(ball: CharacterBody2D) -> void:
-	var id=ball.get_instance_id(); var old=float(_previous_gate_y.get(id,ball.position.y))
-	for i in range(2):
-		var y=float([238,478][i]); if (old-y)*(ball.position.y-y)<=0 and absf(old-ball.position.y)>0.01 and absf(ball.position.x-float(_gate_centers[i]))<=56: _rally_gates|=1<<i
-	_previous_gate_y[id]=ball.position.y
 func _create_portals() -> void:
 	for portal_index in range(2):
 		var portal := Area2D.new()
@@ -130,7 +127,7 @@ func can_score_player_point(_ball: CharacterBody2D) -> bool:
 	match level_id:
 		5: return _gravity_charge
 		6: return _rally_flip
-		8: return _rally_gates==3
+		8: return false
 		9: return _ball.hit_count >= 10
 	return true
 func rejected_point_message() -> String:
@@ -138,15 +135,100 @@ func rejected_point_message() -> String:
 		5: return "PASS THROUGH MOVING CORE FIRST"
 		6: return "RETURN DURING CONTROL FLIP"
 		7: return "HIT THE NEON BUMPER TO SCORE"
-		8: return "THREAD BOTH GATE OPENINGS"
+		8: return "NORMAL RALLIES CANNOT DAMAGE THE BOSS"
 		9: return "METER NOT FULL // 10 HITS TO SCORE"
 	return "RALLY RESET"
-func _create_gates() -> void:
-	for i in range(2):
-		var center=float(_gate_centers[i]); var y=float(GATE_Y[i]); var width=(360-GATE_GAP)*0.5
-		for side in [-1,1]:
-			var body=StaticBody2D.new(); body.position=Vector2(center-56-width*0.5 if side<0 else center+56+width*0.5,y); body.collision_layer=1; body.collision_mask=1
-			var shape=CollisionShape2D.new(); var rect=RectangleShape2D.new(); rect.size=Vector2(width,12); shape.shape=rect; body.add_child(shape); add_child(body)
+func _setup_level8_boss() -> void:
+	var player := get_parent().get_node_or_null("PlayerPaddle") as CharacterBody2D
+	if player:
+		# Layer 3 is reserved for boss attacks so they only collide with the player.
+		player.collision_layer |= 4
+	_level8_core = Area2D.new()
+	_level8_core.name = "ExposedCore"
+	_level8_core.position = Vector2(180.0, 47.0)
+	_level8_core.collision_layer = 0
+	_level8_core.collision_mask = 2
+	_level8_core.monitoring = true
+	var core_shape := CollisionShape2D.new()
+	var core_circle := CircleShape2D.new()
+	core_circle.radius = 16.0
+	core_shape.shape = core_circle
+	_level8_core.add_child(core_shape)
+	_level8_core.body_entered.connect(_on_level8_core_body_entered)
+	add_child(_level8_core)
+
+
+func _process_level8_boss(delta: float) -> void:
+	var cpu := get_parent().get_node_or_null("CPUPaddle") as Node2D
+	if cpu and is_instance_valid(_level8_core):
+		_level8_core.position.x = cpu.position.x
+	if is_instance_valid(_level8_attack_ball):
+		return
+	_level8_core_exposed = false
+	_level8_attack_cooldown -= delta
+	if _level8_attack_cooldown <= 0.0:
+		_launch_level8_attack()
+
+
+func _launch_level8_attack() -> void:
+	var cpu := get_parent().get_node_or_null("CPUPaddle") as Node2D
+	if cpu == null:
+		return
+	var attack := CharacterBody2D.new()
+	attack.name = "BossAttackBall"
+	attack.set_script(BOSS_ATTACK_BALL_SCRIPT)
+	attack.position = Vector2(cpu.position.x, 84.0)
+	attack.collision_layer = 2
+	attack.collision_mask = 4
+	var attack_shape := CollisionShape2D.new()
+	var circle := CircleShape2D.new()
+	circle.radius = 9.0
+	attack_shape.shape = circle
+	attack.add_child(attack_shape)
+	attack.set("_director", self)
+	_level8_attack_ball = attack
+	_level8_core_exposed = true
+	_level8_attack_cooldown = 99.0
+	add_child(attack)
+	_set_notice("RED ATTACK // RETURN TO EXPOSED CORE", 2.0)
+	queue_redraw()
+
+
+func _on_level8_core_body_entered(body: Node2D) -> void:
+	if not _level8_core_exposed or not body.is_in_group("level8_boss_attack") or not bool(body.get("returned")):
+		return
+	if body != _level8_attack_ball:
+		return
+	_resolve_level8_attack(body, true)
+
+
+func on_boss_attack_missed(ball: Node) -> void:
+	if ball != _level8_attack_ball:
+		return
+	_resolve_level8_attack(ball, false)
+	var main_ball := get_parent().get_node_or_null("Ball")
+	if main_ball:
+		main_ball.set("is_stopped", true)
+	get_parent().player_scored(2)
+
+
+func on_boss_attack_expired(ball: Node) -> void:
+	if ball == _level8_attack_ball:
+		_resolve_level8_attack(ball, false)
+
+
+func _resolve_level8_attack(ball: Node, hit_core: bool) -> void:
+	_level8_attack_ball = null
+	_level8_core_exposed = false
+	_level8_attack_cooldown = 2.6
+	if is_instance_valid(ball):
+		ball.queue_free()
+	if hit_core:
+		var main_ball := get_parent().get_node_or_null("Ball")
+		if main_ball:
+			main_ball.set("is_stopped", true)
+		get_parent().player_scored(1)
+	queue_redraw()
 
 func _create_level7_scoring_bumpers() -> void:
 	var total_width := LEVEL_7_BUMPER_GAP * float(LEVEL_7_BUMPER_SIZES.size() - 1)
@@ -203,7 +285,7 @@ func hit_level7_bumper(bumper: Node) -> bool:
 func _bits(value: int) -> int: return int(value&1!=0)+int(value&2!=0)
 func reset_round() -> void:
 	elapsed=0; reverse_warning=0; reverse_left=0; _gravity_charge=false
-	_rally_flip=false; _rally_gates=0; _previous_gate_y.clear(); _portal_flash_left=0
+	_rally_flip=false; _previous_gate_y.clear(); _portal_flash_left=0
 func _draw() -> void:
 	if level_id==5:
 		draw_circle(Vector2(_well_x,360),190,Color(0.95,0.18,0.04,0.045)); draw_arc(Vector2(_well_x,360),190,0,TAU,64,Color(1,0.36,0.12,0.42),2,true); draw_arc(Vector2(_well_x,360),92,0,TAU,48,Color(1,0.67,0.24,0.62),2,true); draw_arc(Vector2(_well_x,360),42,0,TAU,36,Color(1,0.22,0.08,0.9),2.5,true)
@@ -219,9 +301,17 @@ func _draw() -> void:
 			draw_rect(rect, Color(tint.r, tint.g, tint.b, pulse), false, 2.0, true)
 			if rect.size.x > 26.0:
 				draw_line(Vector2(rect.position.x + 5.0, rect.get_center().y), Vector2(rect.end.x - 5.0, rect.get_center().y), Color(0.9, 0.98, 1.0, pulse), 1.0, true)
-	if level_id==8:
-		for i in range(2):
-			var y=float(GATE_Y[i]); var c=float(_gate_centers[i]); draw_line(Vector2(0,y),Vector2(c-56,y),Color(0.15,0.92,1,0.68),3,true); draw_line(Vector2(c+56,y),Vector2(360,y),Color(0.15,0.92,1,0.68),3,true)
+	if level_id == 8 and is_instance_valid(_level8_core):
+		var core_center := _level8_core.position
+		if _level8_core_exposed:
+			draw_circle(core_center, 22.0, Color(1.0, 0.08, 0.04, 0.16))
+			draw_arc(core_center, 20.0 + 2.0 * sin(elapsed * 8.0), 0.0, TAU, 48, Color(1.0, 0.24, 0.08, 0.95), 3.0, true)
+			draw_circle(core_center, 10.0, Color(1.0, 0.52, 0.16, 0.85))
+			draw_circle(core_center, 4.0, Color(1.0, 0.94, 0.68, 1.0))
+		else:
+			draw_circle(core_center, 19.0, Color(0.14, 0.22, 0.38, 0.62))
+			draw_arc(core_center, 18.0, 0.0, TAU, 48, Color(0.25, 0.72, 1.0, 0.7), 2.5, true)
+			draw_line(core_center + Vector2(-8.0, 0.0), core_center + Vector2(8.0, 0.0), Color(0.54, 0.76, 0.9, 0.8), 2.0, true)
 	if level_id==9:
 		for i in range(2):
 			var center := _portal_positions[i]

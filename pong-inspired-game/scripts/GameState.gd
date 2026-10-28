@@ -11,7 +11,7 @@ const LEVEL_ABILITIES: Dictionary = {
 	5: "Gravity Furnace",
 	6: "Control Breaker",
 	7: "Neon Bumper",
-	8: "Phantom Protocol",
+	8: "Core Breaker",
 	9: "Portal Gauntlet",
 	10: "Maximum Velocity"
 }
@@ -19,6 +19,7 @@ const LEVEL_ABILITIES: Dictionary = {
 var unlocked_levels: int = 1
 var current_level: int = 1
 var points_to_win: int = 5
+var show_final_credits: bool = false
 
 # One palette is shared by the level cards and the CPU paddle.
 var level_colors: Dictionary = {

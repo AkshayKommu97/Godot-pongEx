@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-run/main_scene="res://scenes/MainMenu.tscn"
+run/main_scene="res://scenes/SplashScreen.tscn"
 config/features=PackedStringArray("4.7")
 
 [autoload]
@@ -39,10 +39,10 @@ window/handheld/orientation=1
 name="Pong Inspired Game"
 version="1.0"
 description="A top-down Pong inspired game with a start menu, gameplay, and high score system."
-main_scene="res://scenes/MainMenu.tscn"
+main_scene="res://scenes/SplashScreen.tscn"
 window_size=Vector2(800, 600)
 icon="res://assets/icon.png"
-run/main_scene="res://scenes/MainMenu.tscn"
+run/main_scene="res://scenes/SplashScreen.tscn"
 run/physics_fps=60
 run/rendering/quality=2
 run/rendering/vsync=true
